@@ -1,0 +1,33 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Set a branch name to trigger deployment
+  pull_request:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    env:
+      DTC_HEADLES: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-ruby@v1
+      - name: Setup docToolchain
+        run: chmod +x dtcw
+      - name: Migrate Markdown based ADRs from adr-tools to AsciiDoc
+        run: ./dtcw exportMarkdown && cp ./build/adrs/*.adoc ./documentation/adrs/
+      - name: Generate HTML site
+        run: ./dtcw exportStructurizr generateHTML
+      - name: Copy documentation to public
+        run: cp -r ./build/html5 ./public && mv ./public/highly-scalable-image-sharing-platform.html ./public/index.html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public

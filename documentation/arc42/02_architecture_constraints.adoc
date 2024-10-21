@@ -1,0 +1,9 @@
+[[section-architecture-constraints]]
+== Architecture Constraints
+- Con1: The platform must comply with data protection laws (e.g., GDPR, CCPA) and intellectual property regulations. This includes implementing necessary data privacy measures, consent mechanisms, and content moderation practices to avoid legal liabilities.
+- Con2: The solution must adhere to budgetary constraints for development, deployment, and ongoing operational costs.
+- Con3: .NET technologies
+- Con4: Use Google Authentication,
+- Con5: Use Azure Cloud
+
+

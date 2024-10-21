@@ -1,0 +1,62 @@
+:selected-version: 1.25.0
+:icons: font
+
+= Software Architecture Documentation Example with arc42 and C4 Model
+
+This example shows how to use https://arc42.org/[arc42] in combination with the https://c4model.com/[C4 model] with the Documentation as Code technique.
+
+It shows how to use the techniques described in https://www.workingsoftware.dev/software-architecture-documentation-the-ultimate-guide/[The ultimate Guide to Software Architecture Documentation].
+
+Check out the deployed https://bitsmuggler.github.io/arc42-c4-software-architecture-documentation-example/[HTML build] provided on GitHub Pages.
+
+Technologies involved:
+
+* https://arc42.org/[arc42] to get the structure for the software architecture documentation
+* https://c4model.com/[C4 Model] an "abstraction-first" approach to diagramming software architecture, based upon abstractions that reflect how software architects and developers think about and build software.
+* https://structurizr.com/dsl[Structurizr DSL] to describe the https://c4model.com/[C4 Model] of the software system
+* https://github.com/structurizr/cli[Structurizr CLI] a command line utility for Structurizr to export the https://plantuml.com/[PlantUML] diagrams from the C4 Model described in the Structurizr DSL
+* https://asciidoc.org/[AsciiDoc] as format to write the software architecture documentation
+* https://doctoolchain.org[docToolchain] to generate the representations of the software architecture documentation written in https://asciidoc.org/[AsciiDoc]. docToolchain makes use of  https://docs.asciidoctor.org/asciidoctor[Asciidoctor].
+* https://kroki.io[Kroki] to generate diagrams
+* https://docker.com to run structurizr diagrams generator
+
+For more tech inspiration take a look at the https://www.workingsoftware.dev/documentation-as-code-tools[Documentation as Code Technology Radar]
+
+== Prerequisites
+==== Install docToolchain
+* [docToolchain tutorial](https://doctoolchain.org/docToolchain/v2.0.x/020_tutorial/010_Install.html)
+* Configure path to structurizr main dsl file in the docToolchainConfig.groovy
+
+==== Generate PlantUML from the structurizr using the docToolchain
+https://doctoolchain.org/docToolchain/[docToolchain] uses the Structurizr CLI to generate the PlantUML diagrams from the C4 Model described in the Structurizr DSL.
+
+[source, powershell]
+----
+./dtcw.ps1 exportStructurizr
+----
+
+== Generate the software architecture documentation representations
+
+NOTE: these examples use the public https://kroki.io[kroki.io] instance to generate the diagrams.
+For your own documentation, replace the references to kroki.io with your own kroki instance.
+
+Generate the documentation as HTML representation
+
+[source, powershell]
+----
+./dtcw.ps1 generateHTML
+----
+
+Generate the documentation as PDF representation
+
+[source, powershell]
+----
+./dtcw.ps1 generatePDF
+----
+
+Generate the documentation as Microsite
+
+[source, bash]
+----
+./dtcw generateSite
+----

@@ -1,0 +1,78 @@
+[[section-introduction-and-goals]]
+== Introduction and Goals
+The purpose of this document is to describe the architecture of a highly scalable image-sharing platform that allows users to upload, store, and share images with others across the globe. The platform needs to handle millions of concurrent users while ensuring high availability, performance, and security.
+
+This document provides a high-level overview of the platform’s architecture, its main components, and the underlying technologies used to meet business and technical requirements. Additionally, it outlines key design decisions that influence the system’s scalability, reliability, and maintainability.
+
+This document is intended for developers, architects, DevOps engineers, and other stakeholders involved in the design, implementation, and maintenance of the platform.
+
+=== Goals
+- The platform should provide a responsive and intuitive user interface that works seamlessly across different devices (web, mobile, etc.).
+- The architecture should be designed with cloud-native principles to optimize operational costs, using autoscaling and serverless services where appropriate.
+- The platform should be built with future feature expansion in mind, allowing for easy addition of new services (e.g., image editing, tagging, or machine learning features like image recognition).
+
+=== Requirements Overview
+* RQ1: When a user registers, they provide:
+  * Mandatory: First name, Last name, Email address, Password, Profile Image
+  * Optional: age, location, interests etc ...
+ 
+* RQ2: Users can share only images
+  * Formats: png, jpeg
+  * Sizes: 320x240, 1024x768
+
+* RQ3: Unidirectional relationship
+  * User A follows User B
+  * User B may/may not follow User A
+
+* RQ4 A User can:         
+  * Post a new image
+  * Search for other users by first name/last name/username
+  * view other user's public info and shared images
+  * Follow/unfollow other users
+  * See a personalized timeline/newsfeed of the latest images, posted by people they follow
+    * The images need to be sorted by recency in a descending order  
+ 
+### Out of Scope
+* Adding new formats like txt or videos should be easy to add in the future.
+* A User can:
+  * Add reactions, comments, sharing etc..
+
+
+=== Quality Goals
+- **Scalability**:
+  - Billions of active users (~1-2 Billion)
+    - Hundreds of millions of visits/day (100-500 Million)
+    - Each user uploads ~1 image/day
+    - Each image size ~2MB
+    - Data Processing Volume: ~1PB/day
+- **Availability**:
+  - The system must be designed to ensure minimal downtime, providing a 99.9% availability SLA.
+- **Performance**:
+  -  Response time
+    - get images, search user <500ms at 99pt
+    - download image of size 2mb ~2000 ms
+    - Timeline/Newsfeed load time < 1000ms at 99pt
+  - [Out of scope] Uploads and downloads of images must be fast and efficient, with minimal latency, even under heavy loads.
+- **Security**:
+  - User data, including uploaded images, should be stored securely.
+  - Users must be able to authenticate using Google authentication.
+- **Portability**:
+  - Support for multiple platforms web and mobile
+- **Maintainability**
+  - The system should be easy to modify and extend, allowing multiple independent teams to work on different modules simultaneously without conflicts. Changes, such as bug fixes, feature enhancements, or performance improvements, should be implemented quickly with minimal impact on other components.
+
+
+=== Stakeholders
+
+[options="header",cols="3*"]
+|===
+|Role/Name|Contact|Expectations
+| Legal and Compliance Team 
+| LegalAndComplianceReam@gmail.com 
+| Ensure that the platform complies with global data protection regulations such as GDPR, CCPA, and HIPAA. 
+
+
+| Marketing Team Director 
+| marketing@gmail.com 
+|  Ensure the platform’s content is optimized for search engine discoverability (SEO), allowing users to find images through organic search traffic.
+|===
