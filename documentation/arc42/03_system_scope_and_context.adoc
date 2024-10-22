@@ -3,11 +3,6 @@
 
 [[section-system-scope-and-context]]
 == System Scope and Context
-
-
-
-
-
 === Business Context
 
 [plantuml, format=png]   
@@ -21,16 +16,24 @@ include::../diagrams/SystemContext.puml[]
 include::../diagrams/SystemContext-key.puml[]
 ....
 
-**<Diagram or Table>**
+[options="header",cols="2*"]
+|===
+|Actor/System|Description
+| User
+| Users can upload images to the platform. can view and browse images uploaded by themselves and other users. can manage their profiles, including security settings like password management, and other preferences. might follow other users to receive updates or view their image feed.
 
-**<optionally: Explanation of external domain interfaces>**
+| Follower
+| Followers are notified about new images, posts, or activities (e.g., stories, comments) from the users they follow. Followers can browse through and view images and other media from their followed users in their feed. Followers can follow or unfollow users based on their preferences.
 
-=== Technical Context
+| Content Manager
+| Monitor and correct false positives or errors from automated systems (e.g., AI-based content filtering). Review images, comments, and other user-generated content for violations of the platform's guidelines (e.g., inappropriate, offensive, or illegal material). Respond to user reports of harmful content by investigating flagged images or accounts.
 
+| Image sharing system
+| Use the Explore page to discover new posts, accounts, and trends based on interests and previous interactions. Enable users to upload images and store them in a scalable and durable storage solution. 
 
+| Azure storage
+| Acts as the primary storage for uploaded images, allowing users to save and retrieve them quickly. Work with Azure CDN to cache images globally for faster access and reduced latency.
 
-**<Diagram or Table>**
-
-**<optionally: Explanation of technical interfaces>**
-
-**<Mapping Input/Output to Channels>**
+| Google auth system
+| Allow users to log in to the application using their Google account credentials. Provide secure tokens (JWT or OAuth tokens) for authenticated sessions, managing the lifecycle of these tokens (e.g., refresh, revoke).
+|===

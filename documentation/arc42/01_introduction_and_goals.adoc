@@ -74,5 +74,5 @@ This document is intended for developers, architects, DevOps engineers, and othe
 
 | Marketing Team Director 
 | marketing@gmail.com 
-|  Ensure the platform’s content is optimized for search engine discoverability (SEO), allowing users to find images through organic search traffic.
+| Ensure the platform’s content is optimized for search engine discoverability (SEO), allowing users to find images through organic search traffic.
 |===

@@ -2,6 +2,8 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
     model {
         user = person "User" "A registered user of the image sharing platform." "User"
+        follower = person "Follower" "A registered user of the image sharing platform." "User"
+        contentManager = person "ContentManager" "A employee of the harmful content detection department." "Staff"
 
         group "Image sharing platform" {
             storage = softwaresystem "Azure storage" "Uses to store users images." "Existing System"
@@ -25,9 +27,12 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         }
 
         # relationships between people and software systems
-        user -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline "
+        user -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline"
+        user -> googleauth "Redirects, enter credentials" 
+        follower -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline"
+        contentManager -> imageSharingPlatform "Verify content that doesn't passed harmful content verification"
         imageSharingPlatform -> storage "Uploads, removes images"
-        imageSharingPlatform -> googleauth "Registration, authentication" 
+        imageSharingPlatform -> googleauth "Authenticate, verify token" 
         
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
@@ -71,6 +76,17 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             autoLayout
         }
 
+        systemcontext imageSharingPlatform "TechnicalContext" {
+            include *
+            animation {
+                imageSharingPlatform
+                user
+                storage
+                googleauth
+            }
+            autoLayout
+        }
+
         container imageSharingPlatform "Containers" {
             include *
             animation {
@@ -101,7 +117,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             element "User" {
                 background #08427b
             }
-            element "Bank Staff" {
+            element "Staff" {
                 background #999999
             }
             element "Software System" {
