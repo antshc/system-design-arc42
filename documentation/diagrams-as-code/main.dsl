@@ -1,9 +1,10 @@
 workspace "highly-scalable-image-sharing-platform" "This is an example workspace to illustrate system design as code approach" {
 
     model {
-        user = person "User" "A registered user of the image sharing platform." "User"
-        follower = person "Follower" "A registered user of the image sharing platform." "User"
-        contentManager = person "ContentManager" "A employee of the harmful content detection department." "Staff"
+        user = person "User" "A registered user of the image sharing platform." "User,business"
+        userTech = person "Users" "A registered users" "User,tech"
+        follower = person "Follower" "A registered user of the image sharing platform." "User,business"
+        contentManager = person "ContentManager" "A employee of the harmful content detection department." "Staff,business"
 
         group "Image sharing platform" {
             storage = softwaresystem "Azure storage" "Uses to store users images." "Existing System"
@@ -26,14 +27,21 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             }
         }
 
-        # relationships between people and software systems
-        user -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline"
-        user -> googleauth "Redirects, enter credentials" 
-        follower -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline"
-        contentManager -> imageSharingPlatform "Verify content that doesn't passed harmful content verification"
-        imageSharingPlatform -> storage "Uploads, removes images"
-        imageSharingPlatform -> googleauth "Authenticate, verify token" 
+        # business relationships between people and software systems
+        user -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline" "" "business"
+        user -> googleauth "Redirects, enter credentials""" "business"
+        follower -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline""""business"
+        contentManager -> imageSharingPlatform "Verify content that doesn't passed harmful content verification""""business"
+        imageSharingPlatform -> storage "Uploads, removes images" "" "business"
+        imageSharingPlatform -> googleauth "Authenticate, verify token""" "business"
         
+        # tech relationships
+        userTech -> imageSharingPlatform "User information, images" "REST/HTTPs/JSON" "tech"
+        userTech -> googleauth "Credentials" "" "tech"
+        imageSharingPlatform -> googleauth "Code, JWT Token, username, email" "OAuth 2.0/HTTPS/JSON" "tech"
+        imageSharingPlatform -> storage "Images" "REST/HTTPS/Binary" "tech"
+        imageSharingPlatform -> storage "Blob file metadata" "REST/HTTPS/JSON" "tech"
+
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
         user -> cdn "Download images"  "HTTPS"
@@ -62,11 +70,12 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
     views {
         systemlandscape "SystemLandscape" {
             include *
-            autoLayout
+            autoLayout lr
         }
 
-        systemcontext imageSharingPlatform "SystemContext" {
+        systemcontext imageSharingPlatform "BusinessContext" {
             include *
+            exclude element.tag==tech relationship.tag==tech
             animation {
                 imageSharingPlatform
                 user
@@ -78,9 +87,10 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         systemcontext imageSharingPlatform "TechnicalContext" {
             include *
+            exclude element.tag==business relationship.tag==business
             animation {
                 imageSharingPlatform
-                user
+                userTech
                 storage
                 googleauth
             }

@@ -58,5 +58,5 @@ Generate the documentation as Microsite
 
 [source, bash]
 ----
-./dtcw generateSite
+./dtcw.ps1 generateSite
 ----
