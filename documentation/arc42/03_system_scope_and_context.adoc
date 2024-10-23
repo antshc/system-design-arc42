@@ -55,11 +55,17 @@ include::../diagrams/TechnicalContext-key.puml[]
 [options="header",cols="2*"]
 |===
 |Actor/System|Description
-| User
-| Image Uploads Specs:
-Formats: Common image formats (JPEG, PNG).
-Max Size: Images might have a size limit (e.g., 10 MB per image), no videos and gifts support.
-Resolution: Input resolution may be constrained to certain max dimensions (e.g., 1080x1080 for square images).
+| 
+User
+| 
+Images: +
+Formats: JPEG, PNG +
+Max Size: 10 MB per image +
+Max Count: 5 +
+Max Resolution: 1080x1080 +
+
+User information: phone number, age, avatar
+
 
 | Follower
 | Followers are notified about new images, posts, or activities (e.g., stories, comments) from the users they follow. Followers can browse through and view images and other media from their followed users in their feed. Followers can follow or unfollow users based on their preferences.
