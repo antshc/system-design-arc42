@@ -38,9 +38,9 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         # tech relationships
         userTech -> imageSharingPlatform "User information, images" "REST/HTTPs/JSON" "tech"
         userTech -> googleauth "Credentials" "" "tech"
-        imageSharingPlatform -> googleauth "Code, JWT Token, username, email" "OAuth 2.0/HTTPS/JSON" "tech"
+        googleauth -> imageSharingPlatform  "JWT Token, username, email" "OAuth 2.0/HTTPS/JSON" "tech"
         imageSharingPlatform -> storage "Images" "REST/HTTPS/Binary" "tech"
-        imageSharingPlatform -> storage "Blob file metadata" "REST/HTTPS/JSON" "tech"
+        storage -> imageSharingPlatform "Blob file metadata" "REST/HTTPS/JSON" "tech"
 
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
