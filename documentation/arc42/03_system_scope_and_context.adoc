@@ -58,7 +58,6 @@ include::../diagrams/TechnicalContext-key.puml[]
 | 
 User
 | 
-Sends: +
 Images: +
 Formats: JPEG, PNG +
 Max Size: 2 MB per image +
