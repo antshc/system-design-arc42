@@ -26,76 +26,7 @@ Maintain an overview of your source code by making its structure understandable 
 
 
 Contained Building Blocks::
-include::./building_blocks/users_api/users_api_short_description.adocusers_api_short_description.adoc[]
-
-
-==== <Name black box 2>
-
-_<black box template>_
-
-==== <Name black box n>
-
-_<black box template>_
-
-
-==== <Name interface 1>
-
-...
-
-==== <Name interface m>
-
-
-
-=== Level 2
-
-
-
-==== White Box API Application
-
-[plantuml, format=png]   
-....
-include::../diagrams/Components.puml[]
-....
-
-**Legende**
-[plantuml, format=png]   
-....
-include::../diagrams/Components-key.puml[]
-....
-
-
-_<white box template>_
-
-==== White Box _<building block 2>_
-
-
-_<white box template>_
-
-...
-
-==== White Box _<building block m>_
-
-
-_<white box template>_
-
-
-
-=== Level 3
-
-
-
-
-==== White Box <_building block x.1_>
-
-
-
-
-_<white box template>_
-
-
-==== White Box <_building block x.2_>
-
-_<white box template>_
+include::./building_blocks/users_api/users_api_short_description.adoc[]
 
 
 
