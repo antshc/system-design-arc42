@@ -118,6 +118,12 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             autoLayout
         }
 
+        dynamic imageSharingPlatform "TimelinesAPIContainer"{
+            title "Timelines API"
+            timelinesApiApp -> timelinesDatabase
+            autoLayout lr
+        }
+
         styles {
             element "Person" {
                 color #ffffff

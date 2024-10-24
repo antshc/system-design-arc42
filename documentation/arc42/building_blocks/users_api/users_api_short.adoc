@@ -5,10 +5,11 @@ It also manages user data, including personal information, preferences, and secu
 
 ===== Interface(s)
 link:https://editor.swagger.io/?url=https://raw.githubusercontent.com/shcherby/system-design-arc42/refs/heads/main/documentation/arc42/building_blocks/users_api/users_api_swagger.yaml[REST API]
-link:https://messages.com[Messages]
+link:https://github.com[Messages]
 
 ===== Locations
-link:https://details.com[users-api full description]
-link:https://github.com[users-api git hub location]
-link:https://github.com[users-api build pipelines]
-link:https://github.com[users-api artifacts]
+link:https://github.com[users-api details]
+link:https://github.com[users-api repository]
+link:https://github.com[users-api CI/CD]
+link:https://github.com[users-api database]
+link:https://github.com[users-api releases]

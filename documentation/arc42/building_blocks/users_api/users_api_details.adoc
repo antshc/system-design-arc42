@@ -1,40 +1,33 @@
+
+
+
 include::users_api_short_description.adoc[]
 
 ===== Quality/Performance Characteristics
 ====== Performance
-* **Response Time**: Aim for responses within 200 milliseconds.
-* **Throughput**: Support several thousand requests per second (RPS) during peak times.
-* **Latency**: Minimize network latency with efficient API calls and lightweight data formats.
+* Aim for responses within 200 milliseconds.
+* Support several thousand requests per second (RPS) during peak times.
+* Minimize network latency with efficient API calls and lightweight data formats.
 
 ====== Scalability
-* **Horizontal Scalability**: Design to add more instances as user demand increases.
-* **Load Balancing**: Distribute requests evenly across multiple API instances.
+* Design to add more instances as user demand increases.
+* Distribute requests evenly across multiple API instances.
 
 ====== Reliability
-* **High Availability**: Target 99.9% uptime with redundancy and failover strategies.
-* **Graceful Degradation**: Ensure limited functionality in case of partial failures.
-
+* Target 99.9% uptime with redundancy and failover strategies.
+* Ensure limited functionality in case of partial failures.
 
 ===== Fulfilled Requirements
-* **User Registration**: Users can create accounts by providing necessary details (username, email, password).
-* **User Authentication**: Users can log in using their credentials, receiving an access token for subsequent requests.
-* **Profile Management**: Users can view and update their profile information (e.g., username, bio).
-* **Password Recovery**: Users can initiate a password reset process via email.
-* **User Data Security**: All sensitive user data is encrypted in transit and at rest.
-* **Rate Limiting**: The API implements rate limiting to prevent abuse and ensure fair usage.
-* **Versioning**: The API supports versioning to maintain backward compatibility.
-* **Comprehensive Documentation**: Clear and detailed API documentation is provided for developers.
+* Users can create accounts by providing necessary details (username, email, password).
+* Users can log in using their credentials, receiving an access token for subsequent requests.
+* Users can view and update their profile information (e.g., username, bio).
+* All sensitive user data is encrypted in transit and at rest.
 
-===== Open Issues/Problems/Risks
-* **Data Privacy Concerns**: Ensuring compliance with data protection regulations (e.g., GDPR) regarding user data handling and storage.
-* **Scalability Challenges**: Potential difficulties in scaling the API efficiently to handle sudden increases in user demand.
-* **Security Vulnerabilities**: Risks of unauthorized access or data breaches if security measures are not adequately implemented.
-* **Dependency Management**: Reliance on third-party authentication providers could lead to outages or service interruptions.
-* **User Experience Issues**: Complexity in the registration or authentication process may lead to user drop-off.
-* **Performance Bottlenecks**: Risk of slow response times or degraded performance during peak usage periods.
-* **Integration Challenges**: Difficulties in integrating with existing systems or services that rely on user data.
-* **Documentation Gaps**: Incomplete or unclear API documentation may hinder developer adoption and usage.
-
+===== Risks
+* Ensuring compliance with data protection regulations (e.g., GDPR) regarding user data handling and storage.
+* Risks of unauthorized access or data breaches if security measures are not adequately implemented.
+* Reliance on third-party authentication providers could lead to outages or service interruptions.
+* Complexity in the registration or authentication process may lead to user drop-off.
 
 
 === Level 2

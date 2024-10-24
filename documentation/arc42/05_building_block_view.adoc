@@ -26,7 +26,8 @@ Maintain an overview of your source code by making its structure understandable 
 
 
 Contained Building Blocks::
-include::./building_blocks/users_api/users_api_short_description.adoc[]
+include::./building_blocks/users_api/timelines_api_short.adoc[]
+include::./building_blocks/users_api/users_api_short.adoc[]
 
 
 
