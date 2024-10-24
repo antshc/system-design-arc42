@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Users API
+  description: API for managing user-related functionalities in the image-sharing system.
+  version: 1.0.0
+servers:
+  - url: http://api.example.com/v1
+    description: Main API server
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                email:
+                  type: string
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  example: strongpassword
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Bad request (e.g., validation errors)
+
+  /auth/login:
+    post:
+      summary: Authenticate a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  example: strongpassword
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: jwt.token.here
+        '401':
+          description: Unauthorized (invalid credentials)
+
+  /users/{userId}/profile:
+    get:
+      summary: Get user profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: johndoe
+                  email:
+                    type: string
+                    example: johndoe@example.com
+                  bio:
+                    type: string
+                    example: "Just a regular guy."
+        '404':
+          description: User not found
+
+    put:
+      summary: Update user profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                bio:
+                  type: string
+                  example: "Just a regular guy."
+      responses:
+        '200':
+          description: User profile updated successfully
+        '400':
+          description: Bad request (e.g., validation errors)
+        '404':
+          description: User not found
+
+  /auth/password-reset:
+    post:
+      summary: Reset user password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: johndoe@example.com
+      responses:
+        '200':
+          description: Password reset email sent successfully
+        '404':
+          description: User not found

@@ -21,30 +21,20 @@ include::../diagrams/Containers-key.puml[]
 ....
 
 
-
-_**<Overview Diagram>**_
-
 Motivation::
-
-_<text explanation>_
+Maintain an overview of your source code by making its structure understandable through abstraction.
 
 
 Contained Building Blocks::
-_<Description of contained building block (black boxes)>_
 
-Important Interfaces::
-_<Description of important interfaces>_
+==== Users API
 
+The Users API microservice is responsible for managing all user-related functionality within the system. 
+Its primary purpose is to handle operations such as user registration, authentication, profile management, and account settings. 
+It also manages user data, including personal information, preferences, and security features like password updates and account recovery.
 
-
-
-==== <Name black box 1>
-
-
-
-_<Purpose/Responsibility>_
-
-_<Interface(s)>_
+===== Interface(s)
+link:https://editor.swagger.io/?url=https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml[REST API]
 
 _<(Optional) Quality/Performance Characteristics>_
 
