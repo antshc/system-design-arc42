@@ -58,27 +58,30 @@ include::../diagrams/TechnicalContext-key.puml[]
 | 
 User
 | 
+Sends: +
 Images: +
 Formats: JPEG, PNG +
-Max Size: 10 MB per image +
+Max Size: 2 MB per image +
 Max Count: 5 +
 Max Resolution: 1080x1080 +
 
-User information: phone number, age, avatar
-
-
-| Follower
-| Followers are notified about new images, posts, or activities (e.g., stories, comments) from the users they follow. Followers can browse through and view images and other media from their followed users in their feed. Followers can follow or unfollow users based on their preferences.
-
-| Content Manager
-| Monitor and correct false positives or errors from automated systems (e.g., AI-based content filtering). Review images, comments, and other user-generated content for violations of the platform's guidelines (e.g., inappropriate, offensive, or illegal material). Respond to user reports of harmful content by investigating flagged images or accounts.
+User information: phone number, age, avatar ...
 
 | Image sharing system
-| Use the Explore page to discover new posts, accounts, and trends based on interests and previous interactions. Enable users to upload images and store them in a scalable and durable storage solution. 
+| A highly scalable microservices architecture that utilizes eventual consistency to ensure availability and fault tolerance. It is exposed to external services via an API gateway, with access restricted exclusively to the Europe region.
 
 | Azure storage
-| Acts as the primary storage for uploaded images, allowing users to save and retrieve them quickly. Work with Azure CDN to cache images globally for faster access and reduced latency.
+| Stores images as blob files, stores multiple resoultions, stores with minimal redundency configurations. +
+Image Resolutions: +
+Thumbnails (Grid View or Previews) +
+Resolution: 161 x 161 pixels (1:1 aspect ratio) +
+Max Size: Under 100 KB +
+Cover Images (IGTV, Collections, etc.) +
+Resolution: 420 x 654 pixels (4:5 aspect ratio) +
+Max Size: Around 100-300 KB +
+Other types will be provided by designers
+
 
 | Google auth system
-| Allow users to log in to the application using their Google account credentials. Provide secure tokens (JWT or OAuth tokens) for authenticated sessions, managing the lifecycle of these tokens (e.g., refresh, revoke).
+| Integrates using OAuth 2.0 with the implicit flow.
 |===
