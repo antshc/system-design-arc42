@@ -34,3 +34,55 @@ include::users_api_short_description.adoc[]
 * **Performance Bottlenecks**: Risk of slow response times or degraded performance during peak usage periods.
 * **Integration Challenges**: Difficulties in integrating with existing systems or services that rely on user data.
 * **Documentation Gaps**: Incomplete or unclear API documentation may hinder developer adoption and usage.
+
+
+
+=== Level 2
+
+==== White Box API Application
+
+[plantuml, format=png]   
+....
+include::../diagrams/Components.puml[]
+....
+
+**Legende**
+[plantuml, format=png]   
+....
+include::../diagrams/Components-key.puml[]
+....
+
+
+_<white box template>_
+
+==== White Box _<building block 2>_
+
+
+_<white box template>_
+
+...
+
+==== White Box _<building block m>_
+
+
+_<white box template>_
+
+
+
+=== Level 3
+
+
+
+
+==== White Box <_building block x.1_>
+
+
+
+
+_<white box template>_
+
+
+==== White Box <_building block x.2_>
+
+_<white box template>_
+
