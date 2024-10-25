@@ -1,6 +1,10 @@
 workspace "highly-scalable-image-sharing-platform" "This is an example workspace to illustrate system design as code approach" {
 
     model {
+        properties {
+            "structurizr.groupSeparator" "/"
+        }
+
         user = person "User" "A registered user of the image sharing platform." "User,business"
         userTech = person "Users" "A registered users" "User,tech"
         follower = person "Follower" "A registered user of the image sharing platform." "User,business"
@@ -13,17 +17,33 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             
             imageSharingPlatform = softwaresystem "Image sharing system" "Social network system, where user can share images, follow other people." {
                  webApp = container "Web GUI" "Provides all of the image sharing platform functionality to users via their web browser." "Angular" "Web Browser"
-                 postsApiApp = container "Posts API" "Provides posts managament functionality via a JSON/HTTP API." "ASP .NET API, C#"
+                 postsApiApp = container "Posts API" "Provides posts managament functionality via a JSON/HTTP API." "ASP .NET API, C#" "components,timelines"
                  imagesProcessingFuncApp = container "Images Processing Func" "Resize images, removes temporary." "Functions, C#"
                  postsDatabase = container "Posts Database" "Manage user posts, stores images urls." "NoSQL Document Schema" "Database"
-                 timelinesApiApp = container "Timelines API" "Provides timelines functionality via a JSON/HTTP API." "ASP .NET API, C#"
-                 timelinesDatabase = container "Timelines Database" "Stores user timelines." "NoSQL Key/Value Schema" "Database"
+                 timelinesApiApp = container "Timelines API" "Provides timelines functionality via a JSON/HTTP API." "ASP .NET API, C#" {
+                    timeline = component "Timeline" "Timeline entity logic" "Doman entity" "components,timelines"
+                    timelinesRepository = component "Timelines repository"
+                    updatingTimelineEventHandler = component "Updating timeline postCreated integration event" "Triggers updating followers timelines" "MassTransit Consumer" "components,timelines"
+                    followersTimelineUpdater = component "Followers timeline updater" "Updates followers' timelines with the latest posts from the users they follow" "c# classes" "components,timelines"
+                    usersClient = component "Users client" "Get users data from users microservice" "HTTP client" "components,timelines"
+
+                    influencersPosts = component "Influencers posts" "Influencers posts entity logic" "Doman entity" "components,timelines"
+                    influencersPostsRepository = component "Influencers posts repository" "" "" "components,timelines"
+                    updatingInfluencersPostsEventHandler = component "Updating influencers posts on postCreated integration event" "Triggers updating influencers posts" "MassTransit Consumer" "components,timelines"
+                    influencersPostsUpdater = component "Influencers posts updater" "Updates influencers posts with the recent post" "c# classes" "components,timelines"
+
+                    getTimelineEndpoint = component "Timelines endpoint""Handles query requests""Minimal API endpoint" "components,timelines"
+                 }
+                 timelinesDatabase = container "Timelines Database" "Followers timelines, influencers posts." "NoSQL Key/Value Schema" "Database" {
+                    timelinesTable = component "Timelines"
+                    influencersPostsTable = component "Influencers posts"
+                 }
                  searchApiApp = container "Search API" "Users search a JSON/HTTP API." "ASP .NET API, C#"
                  searchDatabase = container "Search Database" "Stores users information, indexed for full text search" "NoSQL Document Schema, Lucena" "Database"
                  usersApiApp = container "Users API" "Users information managment, registration, login using JSON/HTTP API." "ASP .NET API, C#"
                  usersDatabase = container "Users Database" "Stores users account" "NoSQL Document Schema" "Database"
                  identityServerApp = container "Identity Server" "Authentication, Authorization JSON/HTTPS API." "ASP .NET API, C#"
-                 gatewayApiApp = container "Gateway API" "Entry point to the system, hides internal APIs, authentication JSON/HTTPS API." "ASP .NET API, C#, Ocelot"
+                 gatewayApiApp = container "Gateway API" "Entry point to the system, hides internal APIs, authentication JSON/HTTPS API." "ASP .NET API, C#, Ocelot" "components,timelines"
             }
         }
 
@@ -47,7 +67,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         user -> cdn "Download images"  "HTTPS"
         webApp -> gatewayApiApp "fancy-pics.com/api" "HTTPS"
         
-        gatewayApiApp -> postsApiApp "/posts" "JSON/HTTP"
+        gatewayApiApp -> postsApiApp "/posts" "JSON/HTTP" "posts"
         postsApiApp -> postsDatabase "Saves posts data."
         postsApiApp -> storage "Saves posts images."
         cdn -> storage "Pull images"
@@ -65,6 +85,28 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         usersApiApp -> identityServerApp "reads user email, user id"
         identityServerApp -> googleauth "Authentication"
         gatewayApiApp -> identityServerApp "Authentication"
+    
+        # components relations
+        # timelines API
+        # updating timeline
+        postsApiApp -> updatingTimelineEventHandler "uses" "messages" "components,timelines"
+        updatingTimelineEventHandler -> followersTimelineUpdater "uses""" "components,timelines"
+        updatingTimelineEventHandler -> timeline "uses" """components,timelines"
+        followersTimelineUpdater -> usersClient "uses" """components,timelines"
+        usersClient -> usersApiApp "uses" "REST/HTTP" "components,timelines"
+        followersTimelineUpdater -> timelinesRepository "uses""" "components,timelines"
+        timelinesRepository -> timelinesTable "uses""" "components,timelines"
+
+        # updating influencers posts
+        postsApiApp -> updatingInfluencersPostsEventHandler "uses" "messages" "components,timelines"
+        updatingInfluencersPostsEventHandler -> influencersPostsUpdater "uses" "" "components,timelines"
+        influencersPostsUpdater -> influencersPosts "uses" "" "components,timelines"
+        influencersPostsUpdater -> influencersPostsRepository "uses" "" "components,timelines"
+        influencersPostsRepository -> influencersPostsTable "uses" "" "components,timelines"
+
+        # query timelines
+        gatewayApiApp -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
+        getTimelineEndpoint -> timelinesRepository "uses" "" "components,timelines"
     }
 
     views {
@@ -121,7 +163,12 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         dynamic imageSharingPlatform "TimelinesAPIContainer"{
             title "Timelines API"
             timelinesApiApp -> timelinesDatabase
-            autoLayout lr
+            autoLayout
+        }
+
+        component timelinesApiApp "TimelinesApiAppComponents" {
+            include *
+            autoLayout
         }
 
         styles {

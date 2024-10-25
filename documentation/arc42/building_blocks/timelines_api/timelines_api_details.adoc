@@ -1,10 +1,22 @@
 include::../diagrams/TimelinesAPIContainer.puml[]
 include::../diagrams/TimelinesAPIContainer-key.puml[]
 
-include::users_api_short_description.adoc[]
+include::users_api_short.adoc[]
 
 ===== Fulfilled Requirements
+===== Quality Requirements
 The API implements rate limiting to prevent abuse and ensure fair usage.
 
 ===== Risks
 * Risk of slow response times or degraded performance during peak usage periods.
+
+===== Components
+include::../diagrams/TimelinesApiAppComponents.puml[]
+include::../diagrams/TimelinesApiAppComponents-key.puml[]
+
+====== Database
+
+===== Scenarios
+
+
+
