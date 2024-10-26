@@ -21,18 +21,21 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                  imagesProcessingFuncApp = container "Images Processing Func" "Resize images, removes temporary." "Functions, C#"
                  postsDatabase = container "Posts Database" "Manage user posts, stores images urls." "NoSQL Document Schema" "Database"
                  timelinesApiApp = container "Timelines API" "Provides timelines functionality via a JSON/HTTP API." "ASP .NET API, C#" {
-                    timeline = component "Timeline" "Timeline entity logic" "Doman entity" "components,timelines"
+                    group "Domain"{
+                        timeline = component "Timeline" "Timeline entity logic" "Doman entity" "components,timelines"
+                        influencersPosts = component "Influencers posts" "Influencers posts entity logic" "Doman entity" "components,timelines"
+                    }
                     timelinesRepository = component "Timelines repository"
                     updatingTimelineEventHandler = component "Updating timeline postCreated integration event" "Triggers updating followers timelines" "MassTransit Consumer" "components,timelines"
                     followersTimelineUpdater = component "Followers timeline updater" "Updates followers' timelines with the latest posts from the users they follow" "c# classes" "components,timelines"
                     usersClient = component "Users client" "Get users data from users microservice" "HTTP client" "components,timelines"
 
-                    influencersPosts = component "Influencers posts" "Influencers posts entity logic" "Doman entity" "components,timelines"
                     influencersPostsRepository = component "Influencers posts repository" "" "" "components,timelines"
                     updatingInfluencersPostsEventHandler = component "Updating influencers posts on postCreated integration event" "Triggers updating influencers posts" "MassTransit Consumer" "components,timelines"
                     influencersPostsUpdater = component "Influencers posts updater" "Updates influencers posts with the recent post" "c# classes" "components,timelines"
 
-                    getTimelineEndpoint = component "Timelines endpoint""Handles query requests""Minimal API endpoint" "components,timelines"
+                    getTimelineEndpoint = component "Timelines endpoint" "Handles query requests""Minimal API endpoint" "components,timelines"
+                    timelineQuery = component "Timelines query" "Build user timeline query"
                  }
                  timelinesDatabase = container "Timelines Database" "Followers timelines, influencers posts." "NoSQL Key/Value Schema" "Database" {
                     timelinesTable = component "Timelines"
@@ -106,7 +109,9 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         # query timelines
         gatewayApiApp -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
-        getTimelineEndpoint -> timelinesRepository "uses" "" "components,timelines"
+        getTimelineEndpoint -> timelineQuery "uses" "" "components,timelines"
+        timelineQuery -> influencersPostsRepository uses "" "components,timelines"
+        timelineQuery -> timelinesRepository "uses" "" "components,timelines"
     }
 
     views {

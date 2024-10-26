@@ -22,6 +22,8 @@ include::users_api_short_description.adoc[]
 * Users can log in using their credentials, receiving an access token for subsequent requests.
 * Users can view and update their profile information (e.g., username, bio).
 * All sensitive user data is encrypted in transit and at rest.
+* The API implements rate limiting to prevent abuse and ensure fair usage.
+
 
 ===== Risks
 * Ensuring compliance with data protection regulations (e.g., GDPR) regarding user data handling and storage.
