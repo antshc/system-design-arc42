@@ -1,0 +1,99 @@
+:diagram-server-url: https://kroki.io
+:diagram-server-type: kroki_io
+
+===== Fulfilled Requirements
+* Users can read their timeline with recent updates from users they follow.
+* Users can set number of posts in their timeline, max 50 posts.
+
+===== Quality Requirements
+* Aim for responses within 200 milliseconds.
+* Support 1000 requests per second (RPS) during peak times.
+* The Timelines API must remain operational even if other part of the system is temporarily unavailable.
+
+===== Risks
+* Risk of slow response times or degraded performance during peak usage periods.
+
+===== Components
+[plantuml, format=png]   
+....
+include::../../../diagrams/TimelinesApiAppComponents.puml[]
+....
+[plantuml, format=png]   
+....
+include::../../../diagrams/TimelinesApiAppComponents-key.puml[]
+....
+
+*Timeline Event Handler*
+
+* The Timeline Event Handler component is responsible for processing updates to user timelines in response to new created post.
+
+*Followers timeline updater*
+
+* Reads user followers list and insert recent post to the followers timeline, ensuring posts is ordered by recency.
+* Removes outdated posts from the followers timeline.
+
+*Users client*
+
+* Responsible for interacting with the Users API microservice to retrieve user data
+* Fetching a list of followers for a given user.
+* Retrieving the user type regular user, influencer.
+* UsersClient implemented as an abstraction and has Mock version that uses for microservice integration testing
+
+*Timelines repository*
+
+* Responsible for managing and accessing timeline data. 
+* Saving and retrieving followers timeline by user Id.
+
+*Updating Influencers Posts Event Handler*
+
+* Responsible for processing post created events related to influencer posts within the image-sharing system. 
+
+*Influencers posts updater*
+
+* Responsible for managing and updating influencer-related posts within the timeline service. 
+* Maintaining a synchronized copy of posts from users marked as influencers within the Timeline service.
+
+*Influencers posts repository*
+
+* Responsible for storing and managing influencer posts within the timeline service.
+
+*Timeline endpoint*
+
+* Handles Get timeline HTTP requests
+
+*Timeline query*
+
+* Querying and returning calculated user’s timeline by user Id
+* if the user follows any influencers, Querying and returning a user’s timeline by aggregating user timeline with an influencers posts.
+
+*Timelines database*
+
+The Key/Value NoSQL Timelines Database is responsible for efficiently storing and retrieving timeline data in the image-sharing system.
+
+[.small]_**Timelines table**_
+
+Storing each user’s timeline as a unique key, with associated values representing the posts in chronological order, allowing for quick retrieval of timelines.
+[cols="1,2", options="header"]
+|===
+| **Specification**   | **Details**                                                                 
+| **Table Name**      | Timelines                                                                    
+| **Key**             | User Id. +
+                        Data format: GUID as string.                                                             
+| **Value**           | Array of posts, each represented as an object. +
+                        Data format: JSON. +
+                        Max size: 20 MB 
+|===
+
+[.small]_**Influences posts table**_
+
+Is responsible for managing and storing copy of posts created by influencers. 
+[cols="1,2", options="header"]
+|===
+| **Specification**   | **Details**                                                                 
+| **Table Name**      | InfluencersPosts                                                                    
+| **Key**             | Influencer Id. +
+                        Data format: GUID as string.                                                             
+| **Value**           | Array of posts, each represented as an object. +
+                        Data format: JSON. +
+                        Max size: 20 MB 
+|===

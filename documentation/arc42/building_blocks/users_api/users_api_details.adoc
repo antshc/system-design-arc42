@@ -1,7 +1,7 @@
 
 
-
-include::users_api_short_description.adoc[]
+==== Users API
+include::_users_api_short_description.adoc[]
 
 ===== Quality/Performance Characteristics
 ====== Performance

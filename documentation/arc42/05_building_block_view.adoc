@@ -3,15 +3,13 @@
 
 [[section-building-block-view]]
 == Building Block View
+Maintain an overview of your source code by making its structure understandable through abstraction.
 
-
-
-=== Internet Banking System
+=== High level design
 
 [plantuml, format=png]   
 ....
 include::../diagrams/Containers.puml[]
-include::../diagrams/Containers-key.puml[]
 ....
 
 **Legende**
@@ -20,17 +18,10 @@ include::../diagrams/Containers-key.puml[]
 include::../diagrams/Containers-key.puml[]
 ....
 
+=== Microservices
+==== Timelines API
+include::./building_blocks/timelines_api/_timelines_api_short.adoc[]
+include::./building_blocks/timelines_api/_timelines_api_details.adoc[]
 
-Motivation::
-Maintain an overview of your source code by making its structure understandable through abstraction.
-
-
-Contained Building Blocks::
-include::./building_blocks/users_api/timelines_api_short.adoc[]
-include::./building_blocks/users_api/users_api_short.adoc[]
-
-
-
-==== White Box <_building block y.1_>
-
-_<white box template>_
+==== Users API
+include::building_blocks/users_api/_users_api_short.adoc[]

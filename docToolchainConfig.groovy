@@ -14,6 +14,7 @@ docDir = System.getProperty('docDir')?:'.'
 
 inputFiles = [
         [file: 'highly-scalable-image-sharing-platform.adoc', formats: ['html','pdf']],
+        
         /** inputFiles **/
 ]
 

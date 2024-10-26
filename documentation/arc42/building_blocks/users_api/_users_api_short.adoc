@@ -1,4 +1,3 @@
-==== Users API
 The Users API microservice is responsible for managing all user-related functionality within the system. 
 Its primary purpose is to handle operations such as user registration, authentication, profile management, and account settings. 
 It also manages user data, including personal information, preferences, and security features like password updates and account recovery.
