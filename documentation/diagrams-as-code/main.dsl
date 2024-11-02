@@ -17,11 +17,11 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             cdn = softwaresystem "Azure CDN" "Cache images." "Existing System"
             
             imageSharingPlatform = softwaresystem "Image sharing system" "Social network system, where user can share images, follow other people." {
-                 webApp = container "Web GUI" "Provides all of the image sharing platform functionality to users via their web browser." "Angular" "Web Browser"
-                 postsApiApp = container "Posts API" "Provides posts managament functionality via a JSON/HTTP API." "ASP .NET API, C#" "components,timelines"
-                 imagesProcessingFuncApp = container "Images Processing Func" "Resize images, removes temporary." "Functions, C#"
-                 postsDatabase = container "Posts Database" "Manage user posts, stores images urls." "NoSQL Document Schema" "Database"
-                 timelinesApiApp = container "Timelines API" "Provides timelines functionality via a JSON/HTTP API." "ASP .NET API, C#" {
+                webApp = container "Web GUI" "Provides all of the image sharing platform functionality to users via their web browser." "Angular" "Web Browser"
+                postsApiApp = container "Posts API" "Provides posts managament functionality via a JSON/HTTP API." "ASP .NET API, C#" "components,timelines"
+                imagesProcessingFuncApp = container "Images Processing Func" "Resize images, removes temporary." "Functions, C#"
+                postsDatabase = container "Posts Database" "Manage user posts, stores images urls." "NoSQL Document Schema" "Database"
+                timelinesApiApp = container "Timelines API" "Provides timelines functionality via a JSON/HTTP API." "ASP .NET API, C#" {
                     group "Domain"{
                         timeline = component "Timeline" "Timeline entity logic" "Doman entity" "components,timelines"
                         influencersPosts = component "Influencers posts" "Influencers posts entity logic" "Doman entity" "components,timelines"
@@ -35,17 +35,17 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
                     getTimelineEndpoint = component "Timelines endpoint" "Handles query requests""Minimal API endpoint" "components,timelines"
                     timelineQuery = component "Timelines query" "Build user timeline query"
-                 }
-                 timelinesDatabase = container "Timelines Database" "Followers timelines, influencers posts." "NoSQL Key/Value Schema" "Database" {
+                }
+                timelinesDatabase = container "Timelines Database" "Followers timelines, influencers posts." "NoSQL Key/Value Schema" "Database" {
                     timelinesTable = component "Timelines"
                     influencersPostsTable = component "Influencers posts"
-                 }
-                 searchApiApp = container "Search API" "Users search a JSON/HTTP API." "ASP .NET API, C#"
-                 searchDatabase = container "Search Database" "Stores users information, indexed for full text search" "NoSQL Document Schema, Lucena" "Database"
-                 usersApiApp = container "Users API" "Users information managment, registration, login using JSON/HTTP API." "ASP .NET API, C#"
-                 usersDatabase = container "Users Database" "Stores users account" "NoSQL Document Schema" "Database"
-                 identityServerApp = container "Identity Server" "Authentication, Authorization JSON/HTTPS API." "ASP .NET API, C#"
-                 gatewayApiApp = container "Gateway API" "Entry point to the system, hides internal APIs, authentication JSON/HTTPS API." "ASP .NET API, C#, Ocelot" "components,timelines"
+                }
+                searchApiApp = container "Search API" "Users search a JSON/HTTP API." "ASP .NET API, C#"
+                searchDatabase = container "Search Database" "Stores users information, indexed for full text search" "NoSQL Document Schema, Lucena" "Database"
+                usersApiApp = container "Users API" "Users information managment, registration, login using JSON/HTTP API." "ASP .NET API, C#"
+                usersDatabase = container "Users Database" "Stores users account" "NoSQL Document Schema" "Database"
+                identityServerApp = container "Identity Server" "Authentication, Authorization JSON/HTTPS API." "ASP .NET API, C#"
+                gatewayApiApp = container "Gateway API" "Entry point to the system, hides internal APIs, authentication JSON/HTTPS API." "ASP .NET API, C#, Ocelot" "components,timelines"
             }
         }
 
@@ -61,13 +61,13 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         # tech relationships
         userTech -> imageSharingPlatform "User information, images" "REST/HTTPs/JSON" "tech"
         userTech -> googleauth "Credentials" "" "tech"
-        googleauth -> imageSharingPlatform  "JWT Token, username, email" "OAuth 2.0/HTTPS/JSON" "tech"
+        googleauth -> imageSharingPlatform "JWT Token, username, email" "OAuth 2.0/HTTPS/JSON" "tech"
         imageSharingPlatform -> storage "Images" "REST/HTTPS/Binary" "tech"
         storage -> imageSharingPlatform "Blob file metadata" "REST/HTTPS/JSON" "tech"
 
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
-        user -> cdn "Download images"  "HTTPS"
+        user -> cdn "Download images" "HTTPS"
         webApp -> gatewayApiApp "fancy-pics.com/api" "HTTPS"
         
         gatewayApiApp -> postsApiApp "/posts" "JSON/HTTP" "posts"
@@ -110,6 +110,41 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         timelineQuery -> usersClient "uses" "" "components,timelines"
         timelineQuery -> influencersPostsRepository "uses" "" "components,timelines"
         timelineQuery -> timelinesRepository "uses" "" "components,timelines"
+    
+        development = deploymentEnvironment "Development" {
+            deploymentNode "development" "" "Subscription" "" {
+                deploymentNode "rg-development" "" "Resource group" "" {
+                    deploymentNode "Azure kubernetes service" "" "Kubernetes" "" {
+                        deploymentNode "microservices" "" "namespace" "" {
+                            deploymentNode "web-ui" "" "Pod" "" 1 {
+                                containerInstance webapp
+                            }
+                            deploymentNode "gateway-api" "" "Replica Set" "" 3 {
+                                containerInstance gatewayApiApp
+                            }
+                            deploymentNode "users-api" "" "Replica Set" "" 3 {
+                                containerInstance usersApiApp
+                            }
+                            deploymentNode "posts-api" "" "Replica Set" "" 3 {
+                                containerInstance postsApiApp
+                            }
+                            deploymentNode "timelines-api" "" "Replica Set" "" 3 {
+                                containerInstance timelinesApiApp
+                            }
+                        }
+                    }
+                }
+
+                deploymentNode "Azure Cosmos DB" "Uses by developers to test features and bugs" "Azure Cosmos DB" "" {
+                    deploymentNode "Development" "" "Cosmos DB Account" "" {
+                        containerInstance postsDatabase
+                        containerInstance usersDatabase
+                        containerInstance timelinesDatabase
+                    }
+                }
+            }
+        }
+    
     }
 
     views {
@@ -199,6 +234,11 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             timelineQuery -> getTimelineEndpoint "Returns timeline or if user follows influencers, returns aggregated timeline with influencers posts"
             getTimelineEndpoint -> gatewayApiApp "Returns timeline"
             autoLayout rl
+        }
+
+        deployment * development {
+            include *
+            autoLayout
         }
 
         styles {
