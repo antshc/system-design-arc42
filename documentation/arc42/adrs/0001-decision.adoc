@@ -1,0 +1,26 @@
+
+=== ADR 0001: Handling influencer followers timeline
+
+==== Status
+
+Proposed: 2024-02-21
+
+Accepted: 2024-10-10
+
+==== Context
+
+Influencers may have millions of followers, and updating timelines immediately after each post could trigger updates for millions of users, risking overload of the timelines service.
+
+==== Decision
+
+To mitigate this, a separate materialized view table for influencer posts was created. 
+Given the limited number of influencers, this table remains relatively small. When an influencer publishes a new post, it is added to the influencers posts table, with entries ordered in descending order, 
+similar to the main timelines table. During a user timeline query, the timeline query component retrieves the user's list of followed influencers. 
+If influencers are followed, posts from the influencers posts table are aggregated with the user’s timeline posts, creating a unified, chronological feed.
+
+Runtime view of the scenario you can find on the following section 
+xref:highly-scalable-image-sharing-platform.adoc#handling-influencer-followers[Handling influencer followers]
+
+==== Consequences
+
+The Timelines API microservice now maintains a copy of influencer posts, requiring additional logic to ensure data remains synchronized. The user timeline query is a high-load operation, so caching the influencer list is necessary to minimize dependency on the Users API microservice. However, if the Users API service is down, the influencer list cache may become outdated, resulting in an out-of-date timeline for the user.

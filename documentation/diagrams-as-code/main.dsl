@@ -7,7 +7,8 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         user = person "User" "A registered user of the image sharing platform." "User,business"
         userTech = person "Users" "A registered users" "User,tech"
-        follower = person "Follower" "A registered user of the image sharing platform." "User,business"
+        follower = person "Follower" "A registered user what follows other users." "User,business"
+        influencer = person "Influencer" "A registered user what has > 10k followers." "User,business"
         contentManager = person "ContentManager" "A employee of the harmful content detection department." "Staff,business"
 
         group "Image sharing platform" {
@@ -26,13 +27,11 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                         influencersPosts = component "Influencers posts" "Influencers posts entity logic" "Doman entity" "components,timelines"
                     }
                     timelinesRepository = component "Timelines repository"
-                    updatingTimelineEventHandler = component "Updating timeline postCreated integration event" "Triggers updating followers timelines" "MassTransit Consumer" "components,timelines"
+                    updatingTimelineConsumer = component "Updating timeline postCreated event consumer" "Triggers updating followers timelines" "MassTransit Consumer" "components,timelines"
                     followersTimelineUpdater = component "Followers timeline updater" "Updates followers' timelines with the latest posts from the users they follow" "c# classes" "components,timelines"
                     usersClient = component "Users client" "Get users data from users microservice" "HTTP client" "components,timelines"
 
                     influencersPostsRepository = component "Influencers posts repository" "" "" "components,timelines"
-                    updatingInfluencersPostsEventHandler = component "Updating influencers posts on postCreated integration event" "Triggers updating influencers posts" "MassTransit Consumer" "components,timelines"
-                    influencersPostsUpdater = component "Influencers posts updater" "Updates influencers posts with the recent post" "c# classes" "components,timelines"
 
                     getTimelineEndpoint = component "Timelines endpoint" "Handles query requests""Minimal API endpoint" "components,timelines"
                     timelineQuery = component "Timelines query" "Build user timeline query"
@@ -54,6 +53,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         user -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline" "" "business"
         user -> googleauth "Redirects, enter credentials""" "business"
         follower -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline""""business"
+        influencer -> imageSharingPlatform "Publish image, search users, follow other users, read posts from the timeline" "" "business"
         contentManager -> imageSharingPlatform "Verify content that doesn't passed harmful content verification""""business"
         imageSharingPlatform -> storage "Uploads, removes images" "" "business"
         imageSharingPlatform -> googleauth "Authenticate, verify token""" "business"
@@ -92,25 +92,23 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         # components relations
         # timelines API
         # updating timeline
-        postsApiApp -> updatingTimelineEventHandler "uses" "messages" "components,timelines"
-        updatingTimelineEventHandler -> followersTimelineUpdater "uses""" "components,timelines"
-        updatingTimelineEventHandler -> timeline "uses" """components,timelines"
+        postsApiApp -> updatingTimelineConsumer "uses" "messages:posts" "components,timelines"
+        updatingTimelineConsumer -> followersTimelineUpdater "uses""" "components,timelines"
+        updatingTimelineConsumer -> timeline "uses" """components,timelines"
         followersTimelineUpdater -> usersClient "uses" """components,timelines"
         usersClient -> usersApiApp "uses" "REST/HTTP" "components,timelines"
-        followersTimelineUpdater -> timelinesRepository "uses""" "components,timelines"
-        timelinesRepository -> timelinesTable "uses""" "components,timelines"
+        followersTimelineUpdater -> timelinesRepository "uses" "" "components,timelines"
+        followersTimelineUpdater -> influencersPostsRepository "uses" "" "components,timelines"
+        timelinesRepository -> timelinesTable "uses" "" "components,timelines"
 
         # updating influencers posts
-        postsApiApp -> updatingInfluencersPostsEventHandler "uses" "messages" "components,timelines"
-        updatingInfluencersPostsEventHandler -> influencersPostsUpdater "uses" "" "components,timelines"
-        influencersPostsUpdater -> influencersPosts "uses" "" "components,timelines"
-        influencersPostsUpdater -> influencersPostsRepository "uses" "" "components,timelines"
         influencersPostsRepository -> influencersPostsTable "uses" "" "components,timelines"
 
         # query timelines
         gatewayApiApp -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
         getTimelineEndpoint -> timelineQuery "uses" "" "components,timelines"
-        timelineQuery -> influencersPostsRepository uses "" "components,timelines"
+        timelineQuery -> usersClient "uses" "" "components,timelines"
+        timelineQuery -> influencersPostsRepository "uses" "" "components,timelines"
         timelineQuery -> timelinesRepository "uses" "" "components,timelines"
     }
 
@@ -174,6 +172,33 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         component timelinesApiApp "TimelinesApiAppComponents" {
             include *
             autoLayout
+        }
+
+        dynamic timelinesApiApp "TimelinesApiAddInfluencerPosts" {
+            title "Influencer followers timeline updating"
+            postsApiApp -> updatingTimelineConsumer "dispatch post created event"
+            updatingTimelineConsumer -> followersTimelineUpdater "Update timeline {userId,postId,imageUrl}"
+            followersTimelineUpdater -> usersClient "Get user by Id"
+            usersClient -> usersApiApp "GET users/{id}"
+            usersApiApp -> usersClient "Returns user {'type' : 'influencer'}"
+            usersClient -> followersTimelineUpdater "Returns user {'type' : 'influencer'}"
+            followersTimelineUpdater -> influencersPostsRepository "if user type 'influencer', adds influencer post"
+            autoLayout lr
+        }
+
+        dynamic timelinesApiApp "TimelinesApiQueryInfluencerPostsInTimeline" {
+            title "Follower query influencer posts in the timeline"
+            gatewayApiApp -> getTimelineEndpoint "/timelines/{userId}"
+            getTimelineEndpoint -> timelineQuery "Get user timeline by id {userId}"
+            timelineQuery -> timelinesRepository "Reads timeline by user id {userId}"
+            timelineQuery -> usersClient "Get user influencer folowers"
+            usersClient -> usersApiApp "GET /users/{id}/followers?type=influencer"
+            usersApiApp -> usersClient "Returns list of influencers"
+            usersClient -> timelineQuery "Returns list of influencers"
+            timelineQuery -> influencersPostsRepository "if user follows influencers, reads influencer posts"
+            timelineQuery -> getTimelineEndpoint "Returns timeline or if user follows influencers, returns aggregated timeline with influencers posts"
+            getTimelineEndpoint -> gatewayApiApp "Returns timeline"
+            autoLayout rl
         }
 
         styles {

@@ -97,3 +97,34 @@ Is responsible for managing and storing copy of posts created by influencers.
                         Data format: JSON. +
                         Max size: 20 MB 
 |===
+
+
+===== Runtime views
+[[handling-influencer-followers]]
+====== Handling influencer followers timeline
+[plantuml, format=png]   
+....
+include::../../../diagrams/TimelinesApiAddInfluencerPosts.puml[]
+....
+[plantuml, format=png]   
+....
+include::../../../diagrams/TimelinesApiAddInfluencerPosts-key.puml[]
+....
+
+Posts api microservice dispatches post created event. 
+Post created event consumes by post created event consumer component.
+
+
+[plantuml, format=png]   
+....
+include::../../../diagrams/TimelinesApiQueryInfluencerPostsInTimeline.puml[]
+....
+[plantuml, format=png]   
+....
+include::../../../diagrams/TimelinesApiQueryInfluencerPostsInTimeline-key.puml[]
+....
+
+
+
+
+
