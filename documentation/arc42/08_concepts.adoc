@@ -5,18 +5,65 @@
 
 
 
-=== _<Concept 1>_
+=== Logging
+In the microservice architecture for our application, logging is implemented as a cross-cutting concern to provide consistent, centralized, and structured logging across all services. Using ASP.NET Core as the framework and Azure Application Insights (App Insights) as the logging and monitoring solution, our approach to logging supports traceability, debugging, and performance monitoring across the system.
 
-_<explanation>_
+==== Description
 
+- Centralized Logging: Each microservice uses ASP.NET Core’s built-in logging capabilities, which are configured to send structured log data to Azure App Insights. This setup ensures that logs are collected centrally, making it easier to track interactions and dependencies across services.
+- Correlation IDs: Each request across microservices is tagged with a unique Correlation ID. This ID is propagated throughout all API calls, message queues, and external service integrations, allowing developers and operators to trace the lifecycle of requests across multiple services and identify bottlenecks or errors in the request flow.
+- Log Levels: Different log levels (e.g., Information, Warning, Error, Critical) are used to classify log messages based on severity. Critical errors and warnings are set to trigger alerts in App Insights, providing immediate notification to the support team if any issues arise.
+- Performance Metrics and Insights: In addition to application logs, App Insights collects performance metrics such as request durations, failure rates, and dependencies. These metrics help monitor the health of the microservices and identify potential performance issues or resource bottlenecks.
+- Security and Privacy Compliance: Logging is configured to avoid sensitive data exposure. Personally identifiable information (PII) is redacted or excluded from logs, ensuring compliance with privacy regulations and standards.
 
+===  Message Handling with MassTransit and Azure Service Bus
 
-=== _<Concept 2>_
+In our microservices architecture, message handling is treated as a cross-cutting concern to facilitate reliable and decoupled communication between services. By implementing the MassTransit library with Azure Service Bus, we enable multiple consumers to process the same message type independently, enhancing modularity and reducing service coupling.
 
-_<explanation>_
+==== Description
 
-...
+- Multiple Consumers for the Same Event: MassTransit allows for multiple consumers to subscribe to a single event type. For example, when a `PostCreatedEvent` is published, both the `AuditConsumer` and `NotificationConsumer` can independently handle the message, ensuring that different parts of the system can respond to the same event in their own ways.
+- Decoupled Communication: This approach fosters loose coupling between services. Each consumer operates independently and can be modified or replaced without impacting other consumers or the message publisher.
+- Scalability and Reliability: Utilizing Azure Service Bus provides a robust messaging infrastructure that handles message queuing, delivery guarantees, and scaling, which ensures that the system remains responsive even under high load.
 
-=== _<Concept n>_
+==== Code Example: Consumer Registration
 
-_<explanation>_
+In the following code snippet, we register two consumers—`AuditConsumer` and `NotificationConsumer`—to listen for `PostCreatedEvent` messages using MassTransit with Azure Service Bus.
+
+[source,csharp]
+----
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMassTransit(x =>
+    {
+        // Register each consumer for handling PostCreatedEvent
+        x.AddConsumer<AuditConsumer>();
+        x.AddConsumer<NotificationConsumer>();
+
+        // Configure the MassTransit bus to use Azure Service Bus
+        x.UsingAzureServiceBus((context, cfg) =>
+        {
+            cfg.Host("your-azure-service-bus-connection-string");
+
+            // Configure the topic and subscription for the PostCreatedEvent
+            cfg.Message<PostCreatedEvent>(configTopology =>
+            {
+                configTopology.SetEntityName("post-created-topic");
+            });
+
+            // Configure subscription endpoints for each consumer
+            cfg.SubscriptionEndpoint("audit-consumer-subscription", e =>
+            {
+                e.ConfigureConsumer<AuditConsumer>(context);
+            });
+
+            cfg.SubscriptionEndpoint("notification-consumer-subscription", e =>
+            {
+                e.ConfigureConsumer<NotificationConsumer>(context);
+            });
+        });
+    });
+
+    services.AddMassTransitHostedService();
+}
+----
