@@ -8,45 +8,56 @@
 
 
 
-=== Infrastructure Level 1
+=== Development environment
 
 [plantuml, format=png]   
 ....
-include::../diagrams/LiveDeployment.puml[]
+include::../diagrams/DeploymentDevelopment.puml[]
 ....
 
 **Legende**
 [plantuml, format=png]   
 ....
-include::../diagrams/LiveDeployment-key.puml[]
+include::../diagrams/DeploymentDevelopment-key.puml[]
 ....
 
-Motivation::
+==== Motivation
 
-_<explanation in text form>_
+The development environment serves as a critical space for developers and QA engineers to validate features before deployment to production. This environment allows for comprehensive testing and debugging, enabling the team to identify and address issues early in the development cycle. By simulating a production-like setup, the development environment ensures that new features, updates, and configurations are thoroughly vetted, reducing the risk of errors and unexpected behavior in the live system.
 
-Quality and/or Performance Features::
+Additionally, this environment promotes collaborative testing and iterative improvement, fostering a controlled, stable setting for finalizing code quality and functionality prior to production release.
 
-_<explanation in text form>_
+==== Quality and/or Performance Features
+* The environment does not utilize Azure Front Door since it does not handle user traffic.
+* Azure Kubernetes Service (AKS) is configured with only 2 nodes, as traffic demands are minimal in this environment.
+* It supports deploying all microservices under separate namespaces, enabling the creation of isolated feature environments for testing individual features or changes.
+* Resources are optimized to reduce costs, given that the environment’s primary purpose is internal testing rather than production-scale performance.
+* Monitoring and logging are set up to capture development-level performance and error data, aiding in debugging without the need for high-traffic resilience.
 
-Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
+=== Production environment
 
+[plantuml, format=png]   
+....
+include::../diagrams/DeploymentProduction.puml[]
+....
 
-=== Infrastructure Level 2
+**Legende**
+[plantuml, format=png]   
+....
+include::../diagrams/DeploymentProduction-key.puml[]
+....
 
+==== Motivation
+The production environment is designed to provide a stable, secure, and high-performing infrastructure for serving live users. It is configured to handle real-world traffic, ensuring high availability and scalability to meet varying demands. By mirroring the final deployment setup, the production environment allows the system to operate at its best, delivering a seamless user experience.
+Robust security measures, such as firewalls, encryption, and access controls, are implemented to protect sensitive data and maintain compliance with industry standards. Additionally, advanced monitoring and alerting systems are set up to detect and respond to issues in real time, minimizing downtime and ensuring business continuity.
+This environment represents the ultimate stage in the deployment pipeline, where thoroughly tested features and updates are made available to end users, requiring the highest standards of reliability, performance, and resilience.
 
+==== Quality and/or Performance Features
 
-==== _<Infrastructure Element 1>_
-
-_<diagram + explanation>_
-
-==== _<Infrastructure Element 2>_
-
-_<diagram + explanation>_
-
-...
-
-==== _<Infrastructure Element n>_
-
-_<diagram + explanation>_
+* The production environment is configured for maximum uptime, utilizing redundancy and failover mechanisms to ensure service continuity, even in case of partial system failures.
+* Auto-scaling features are enabled to handle fluctuations in user demand, allowing the system to maintain performance during peak loads without manual intervention.
+* Strict security protocols, such as encryption, access control, and network isolation, are in place to protect sensitive data and meet industry compliance standards.
+* Optimized for low-latency responses through global load balancing (e.g., Azure Front Door) and geographic replication, reducing response times for users across different regions.
+* Real-time monitoring and alerting are established to track performance metrics, identify potential issues, and trigger alerts to the operations team for rapid incident response.
+* Implemented through distributed systems and backup mechanisms, ensuring the system can withstand hardware failures, network issues, and other disruptions without affecting user experience.
+* Ensures strong or eventual consistency depending on the service requirements, balancing availability with the consistency needs of different microservices in the system.

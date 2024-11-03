@@ -113,23 +113,57 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
     
         development = deploymentEnvironment "Development" {
             deploymentNode "development" "" "Subscription" "" {
-                deploymentNode "rg-development" "" "Resource group" "" {
-                    deploymentNode "Azure kubernetes service" "" "Kubernetes" "" {
-                        deploymentNode "microservices" "" "namespace" "" {
-                            deploymentNode "web-ui" "" "Pod" "" 1 {
-                                containerInstance webapp
-                            }
-                            deploymentNode "gateway-api" "" "Replica Set" "" 3 {
-                                containerInstance gatewayApiApp
-                            }
-                            deploymentNode "users-api" "" "Replica Set" "" 3 {
-                                containerInstance usersApiApp
-                            }
-                            deploymentNode "posts-api" "" "Replica Set" "" 3 {
-                                containerInstance postsApiApp
-                            }
-                            deploymentNode "timelines-api" "" "Replica Set" "" 3 {
-                                containerInstance timelinesApiApp
+                
+                deploymentNode "rg-development-aks" "" "Resource group" "" {
+
+                    privateLinkService = infrastructureNode "aks-ingress-pls" {
+                        technology "Private link service"
+                    }
+                    deploymentNode "snet-development-aks" " ""vnet" "" {
+                        lb = infrastructureNode "app-ingress-lb" {
+                                    technology "Load balancer"
+                                    description "Load balancer, external ip: 10.10.0.30"
+                                    privateLinkService -> this "uses"
+                                }
+                        deploymentNode "aks-development-aks" "" "Azure kubernetes service" "" {
+                            
+                            deploymentNode "microservices" "" "namespace" "" {
+                                ingress = infrastructureNode "app-ingress" {
+                                    technology "Ingress"
+                                    description "Routes traffic by rules: /web, /api/users, /api/posts, /api/timeline, /api/search"
+                                    lb -> this "Redirect trafic to internal aks ingress service" "TCP/IP" ""
+                                }
+                                
+                                deploymentNode "web" "" "Pod" "" 1 {
+                                    containerInstance webapp {
+                                        ingress -> this "/web"
+                                    }
+                                }
+                                deploymentNode "users-api" "" "Replica Set" "" 3 {
+                                    containerInstance usersApiApp {
+                                        ingress -> this "/users"
+                                    }
+                                }
+                                deploymentNode "posts-api" "" "Replica Set" "" 3 {
+                                    containerInstance postsApiApp {
+                                        ingress -> this "/posts"
+                                    }
+                                }
+                                deploymentNode "timelines-api" "" "Replica Set" "" 3 {
+                                    containerInstance timelinesApiApp {
+                                        ingress -> this "/timeline"
+                                    }
+                                }
+                                deploymentNode "search-api" "" "Replica Set" "" 3 {
+                                    containerInstance searchApiApp {
+                                        ingress -> this "/search"
+                                    }
+                                }
+                                deploymentNode "identity-server" "" "Replica Set" "" 3 {
+                                    containerInstance identityServerApp {
+                                        ingress -> this "/auth"
+                                    }
+                                }
                             }
                         }
                     }
@@ -142,9 +176,107 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                         containerInstance timelinesDatabase
                     }
                 }
+
+                deploymentNode "Azure storage" "Uses by developers" "Azure storage" "" {
+                    deploymentNode "storage-development" "Uses by developers" "Azure storage account" "" {
+                        softwareSystemInstance storage 
+                    }
+                }
             }
+            
         }
-    
+
+        production = deploymentEnvironment "Production" {
+            deploymentNode "production" "" "Subscription" "" {
+                deploymentNode "rg-production-frontdoor" "" "Resource group" "" {
+                    frontDoorPrd = infrastructureNode "frontdoor-production" {
+                        technology "Azure Front Door"
+                    }
+                    frontDoorAksPrivateEndpoint = infrastructureNode "frontdoor-aks-pe-production" {
+                        technology "Azure private endpoint"
+                        description "private endpoint managed by azure front door"
+                        frontDoorPrd -> this "Uses"
+                    }
+                    frontDoorStoragePrivateEndpoint = infrastructureNode "frontdoor-storage-pe-production" {
+                        technology "Azure private endpoint"
+                        description "private endpoint managed by azure front door"
+                        frontDoorPrd -> this "Uses"
+                    }
+                }
+                deploymentNode "rg-production-aks" "" "Resource group" "" {
+
+                    privateLinkServicePrd = infrastructureNode "aks-ingress-pls" {
+                        technology "Private link service"
+                        frontDoorAksPrivateEndpoint -> this "Uses"
+                    }
+                    deploymentNode "snet-production-aks" " ""vnet" "" {
+                        lbPrd = infrastructureNode "app-ingress-lb" {
+                                    technology "Load balancer"
+                                    description "Load balancer, external ip: 10.10.0.30"
+                                    privateLinkServicePrd -> this
+                                }
+                        deploymentNode "aks-production-aks" "" "Azure kubernetes service" "" {
+                            
+                            deploymentNode "microservices" "" "namespace" "" {
+                                ingressPrd = infrastructureNode "app-ingress" {
+                                    technology "Ingress"
+                                    description "Routes traffic by rules: /web, /api/users, /api/posts, /api/timeline, /api/search"
+                                    lbPrd -> this "Redirect trafic to internal aks ingress service" "TCP/IP" ""
+                                }
+                                
+                                deploymentNode "web" "" "Pod" "" 1 {
+                                    containerInstance webapp {
+                                        ingressPrd -> this "/web"
+                                    }
+                                }
+                                deploymentNode "users-api" "" "Replica Set" "" 3 {
+                                    containerInstance usersApiApp {
+                                        ingressPrd -> this "/users"
+                                    }
+                                }
+                                deploymentNode "posts-api" "" "Replica Set" "" 3 {
+                                    containerInstance postsApiApp {
+                                        ingressPrd -> this "/posts"
+                                    }
+                                }
+                                deploymentNode "timelines-api" "" "Replica Set" "" 3 {
+                                    containerInstance timelinesApiApp {
+                                        ingressPrd -> this "/timeline"
+                                    }
+                                }
+                                deploymentNode "search-api" "" "Replica Set" "" 3 {
+                                    containerInstance searchApiApp {
+                                        ingressPrd -> this "/search"
+                                    }
+                                }
+                                deploymentNode "identity-server" "" "Replica Set" "" 3 {
+                                    containerInstance identityServerApp {
+                                        ingressPrd -> this "/auth"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                deploymentNode "Azure Cosmos DB" "Uses by real users" "Azure Cosmos DB" "" {
+                    deploymentNode "Production" "" "Cosmos DB Account" "" {
+                        containerInstance postsDatabase
+                        containerInstance usersDatabase
+                        containerInstance timelinesDatabase
+                    }
+                }
+
+                deploymentNode "Azure storage" "Uses by real users" "Azure storage" "" {
+                    deploymentNode "storage-production" "Uses by real users" "Azure storage account" "" {
+                        softwareSystemInstance storage {
+                            frontDoorStoragePrivateEndpoint -> this "Cache content"
+                        }
+                    }
+                }
+            }
+            
+        }
     }
 
     views {
@@ -236,9 +368,14 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             autoLayout rl
         }
 
-        deployment * development {
+        deployment * development "DeploymentDevelopment" "Deployment Development environment" {
             include *
-            autoLayout
+            autoLayout lr
+        }
+
+        deployment * production "DeploymentProduction" "Deployment Production environment" {
+            include *
+            autoLayout lr
         }
 
         styles {
