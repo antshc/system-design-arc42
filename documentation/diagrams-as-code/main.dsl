@@ -14,7 +14,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         group "Image sharing platform" {
             storage = softwaresystem "Azure storage" "Uses to store users images." "Existing System"
             googleauth = softwaresystem "Google auth system" "Uses to authenticate users with google account." "Existing System"
-            cdn = softwaresystem "Azure CDN" "Cache images." "Existing System"
+            frontdoor = softwaresystem "Azure Front Door" "Cache images." "Existing System"
             
             imageSharingPlatform = softwaresystem "Image sharing system" "Social network system, where user can share images, follow other people." {
                 webApp = container "Web GUI" "Provides all of the image sharing platform functionality to users via their web browser." "Angular" "Web Browser"
@@ -67,13 +67,13 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
-        user -> cdn "Download images" "HTTPS"
+        user -> frontdoor "Download images" "HTTPS"
         webApp -> gatewayApiApp "fancy-pics.com/api" "HTTPS"
         
         gatewayApiApp -> postsApiApp "/posts" "JSON/HTTP" "posts"
         postsApiApp -> postsDatabase "Saves posts data."
         postsApiApp -> storage "Saves posts images."
-        cdn -> storage "Pull images"
+        frontdoor -> storage "Pull images"
         imagesProcessingFuncApp -> storage "Saves resized images."
         imagesProcessingFuncApp -> storage "Listen for new images."
         
