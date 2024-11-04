@@ -68,9 +68,10 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
         user -> frontdoor "Download images" "HTTPS"
-        webApp -> identityServerApp "Uses"
+        
         
         user -> postsApiApp "/posts" "JSON/HTTP" "posts"
+        webApp -> postsApiApp "Uses"
         postsApiApp -> postsDatabase "Saves posts data."
         postsApiApp -> storage "Saves posts images."
         frontdoor -> storage "Pull images"
@@ -78,17 +79,21 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         imagesProcessingFuncApp -> storage "Listen for new images."
         
         user -> timelinesApiApp "/timelines" "JSON/HTTP"
+        webApp -> timelinesApiApp "/timelines" "JSON/HTTP"
         timelinesApiApp -> timelinesDatabase "Stores posts as a timeline."
 
         user -> searchApiApp "/search" "JSON/HTTP"
+        webApp -> searchApiApp "/search" "JSON/HTTP"
         searchApiApp -> searchDatabase "Full text search" "JSON/HTTP"
 
         user -> usersApiApp "users" "JSON/HTTP"
+        webApp -> usersApiApp "/search" "JSON/HTTP"
         usersApiApp -> usersDatabase "Saves user info." "JSON/HTTP"
         usersApiApp -> identityServerApp "reads user email, user id"
         identityServerApp -> googleauth "Authentication"
         identityServerApp -> identityServerDatabase "Uses"
         user -> identityServerApp "Authentication"
+        webApp -> identityServerApp "Uses"
     
         # components relations
         # timelines API
@@ -327,7 +332,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                 usersDatabase
                 googleauth
             }
-            autoLayout
+            autoLayout lr
         }
 
         dynamic imageSharingPlatform "TimelinesAPIContainer"{
