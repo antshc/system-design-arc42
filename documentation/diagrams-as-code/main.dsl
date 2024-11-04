@@ -46,7 +46,6 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                 usersDatabase = container "Users Database" "Stores users account" "NoSQL Document Schema" "Database"
                 identityServerApp = container "Identity Server" "Authentication, Authorization JSON/HTTPS API." "ASP .NET API, C#"
                 identityServerDatabase = container "Identity Server Database" "Authentication, Authorization JSON/HTTPS API." "SQL Server" "Database"
-                gatewayApiApp = container "Gateway API" "Entry point to the system, hides internal APIs, authentication JSON/HTTPS API." "ASP .NET API, C#, Ocelot" "components,timelines"
             }
         }
 
@@ -69,28 +68,27 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         # relationships to/from containers
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
         user -> frontdoor "Download images" "HTTPS"
-        webApp -> gatewayApiApp "fancy-pics.com/api" "HTTPS"
         webApp -> identityServerApp "Uses"
         
-        gatewayApiApp -> postsApiApp "/posts" "JSON/HTTP" "posts"
+        user -> postsApiApp "/posts" "JSON/HTTP" "posts"
         postsApiApp -> postsDatabase "Saves posts data."
         postsApiApp -> storage "Saves posts images."
         frontdoor -> storage "Pull images"
         imagesProcessingFuncApp -> storage "Saves resized images."
         imagesProcessingFuncApp -> storage "Listen for new images."
         
-        gatewayApiApp -> timelinesApiApp "/timelines" "JSON/HTTP"
+        user -> timelinesApiApp "/timelines" "JSON/HTTP"
         timelinesApiApp -> timelinesDatabase "Stores posts as a timeline."
 
-        gatewayApiApp -> searchApiApp "/search" "JSON/HTTP"
+        user -> searchApiApp "/search" "JSON/HTTP"
         searchApiApp -> searchDatabase "Full text search" "JSON/HTTP"
 
-        gatewayApiApp -> usersApiApp "users" "JSON/HTTP"
+        user -> usersApiApp "users" "JSON/HTTP"
         usersApiApp -> usersDatabase "Saves user info." "JSON/HTTP"
         usersApiApp -> identityServerApp "reads user email, user id"
         identityServerApp -> googleauth "Authentication"
         identityServerApp -> identityServerDatabase "Uses"
-        gatewayApiApp -> identityServerApp "Authentication"
+        user -> identityServerApp "Authentication"
     
         # components relations
         # timelines API
@@ -108,7 +106,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         influencersPostsRepository -> influencersPostsTable "uses" "" "components,timelines"
 
         # query timelines
-        gatewayApiApp -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
+        user -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
         getTimelineEndpoint -> timelineQuery "uses" "" "components,timelines"
         timelineQuery -> usersClient "uses" "" "components,timelines"
         timelineQuery -> influencersPostsRepository "uses" "" "components,timelines"
@@ -316,7 +314,6 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             include *
             animation {
                 webApp
-                gatewayApiApp
                 identityServerApp
                 postsApiApp
                 imagesProcessingFuncApp
@@ -368,7 +365,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         dynamic timelinesApiApp "TimelinesApiQueryInfluencerPostsInTimeline" {
             title "Follower query influencer posts in the timeline"
-            gatewayApiApp -> getTimelineEndpoint "/timelines/{userId}"
+            user -> getTimelineEndpoint "/timelines/{userId}"
             getTimelineEndpoint -> timelineQuery "Get user timeline by id {userId}"
             timelineQuery -> timelinesRepository "Reads timeline by user id {userId}"
             timelineQuery -> usersClient "Get user influencer folowers"
@@ -377,7 +374,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             usersClient -> timelineQuery "Returns list of influencers"
             timelineQuery -> influencersPostsRepository "if user follows influencers, reads influencer posts"
             timelineQuery -> getTimelineEndpoint "Returns timeline or if user follows influencers, returns aggregated timeline with influencers posts"
-            getTimelineEndpoint -> gatewayApiApp "Returns timeline"
+            getTimelineEndpoint -> user "Returns timeline"
             autoLayout rl
         }
 
