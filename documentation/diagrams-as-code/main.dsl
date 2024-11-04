@@ -45,6 +45,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                 usersApiApp = container "Users API" "Users information managment, registration, login using JSON/HTTP API." "ASP .NET API, C#"
                 usersDatabase = container "Users Database" "Stores users account" "NoSQL Document Schema" "Database"
                 identityServerApp = container "Identity Server" "Authentication, Authorization JSON/HTTPS API." "ASP .NET API, C#"
+                identityServerDatabase = container "Identity Server Database" "Authentication, Authorization JSON/HTTPS API." "SQL Server" "Database"
                 gatewayApiApp = container "Gateway API" "Entry point to the system, hides internal APIs, authentication JSON/HTTPS API." "ASP .NET API, C#, Ocelot" "components,timelines"
             }
         }
@@ -69,6 +70,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         user -> webApp "Visits fancy-pics.com/web using." "HTTPS"
         user -> frontdoor "Download images" "HTTPS"
         webApp -> gatewayApiApp "fancy-pics.com/api" "HTTPS"
+        webApp -> identityServerApp "Uses"
         
         gatewayApiApp -> postsApiApp "/posts" "JSON/HTTP" "posts"
         postsApiApp -> postsDatabase "Saves posts data."
@@ -87,6 +89,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         usersApiApp -> usersDatabase "Saves user info." "JSON/HTTP"
         usersApiApp -> identityServerApp "reads user email, user id"
         identityServerApp -> googleauth "Authentication"
+        identityServerApp -> identityServerDatabase "Uses"
         gatewayApiApp -> identityServerApp "Authentication"
     
         # components relations
@@ -333,6 +336,16 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         dynamic imageSharingPlatform "TimelinesAPIContainer"{
             title "Timelines API"
             timelinesApiApp -> timelinesDatabase
+            autoLayout
+        }
+        
+        dynamic imageSharingPlatform "Authentication"{
+            title "Authentication"
+            user -> webApp "Initiates authentication"
+            webApp -> identityServerApp "Requests authentication"
+            identityServerApp -> googleauth "Delegates authentication via OAuth 2.0"
+            identityServerApp -> identityServerDatabase "Verifies user identity and retrieves user details"
+            identityServerApp -> webApp "Issues JWT access token upon successful authentication"
             autoLayout
         }
 
