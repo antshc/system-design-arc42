@@ -70,30 +70,25 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         user -> frontdoor "Download images" "HTTPS"
         
         
-        user -> postsApiApp "/posts" "JSON/HTTP" "posts"
-        webApp -> postsApiApp "Uses"
+        webApp -> postsApiApp "/posts" "JSON/HTTP" "posts"
         postsApiApp -> postsDatabase "Saves posts data."
         postsApiApp -> storage "Saves posts images."
         frontdoor -> storage "Pull images"
         imagesProcessingFuncApp -> storage "Saves resized images."
         imagesProcessingFuncApp -> storage "Listen for new images."
         
-        user -> timelinesApiApp "/timelines" "JSON/HTTP"
         webApp -> timelinesApiApp "/timelines" "JSON/HTTP"
         timelinesApiApp -> timelinesDatabase "Stores posts as a timeline."
 
-        user -> searchApiApp "/search" "JSON/HTTP"
         webApp -> searchApiApp "/search" "JSON/HTTP"
         searchApiApp -> searchDatabase "Full text search" "JSON/HTTP"
 
-        user -> usersApiApp "users" "JSON/HTTP"
-        webApp -> usersApiApp "/search" "JSON/HTTP"
+        webApp -> usersApiApp "/users" "JSON/HTTP"
         usersApiApp -> usersDatabase "Saves user info." "JSON/HTTP"
         usersApiApp -> identityServerApp "reads user email, user id"
         identityServerApp -> googleauth "Authentication"
         identityServerApp -> identityServerDatabase "Uses"
-        user -> identityServerApp "Authentication"
-        webApp -> identityServerApp "Uses"
+        webApp -> identityServerApp "Authentication" "JSON/HTTP"
     
         # components relations
         # timelines API
@@ -111,7 +106,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         influencersPostsRepository -> influencersPostsTable "uses" "" "components,timelines"
 
         # query timelines
-        user -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
+        webApp -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
         getTimelineEndpoint -> timelineQuery "uses" "" "components,timelines"
         timelineQuery -> usersClient "uses" "" "components,timelines"
         timelineQuery -> influencersPostsRepository "uses" "" "components,timelines"
@@ -317,6 +312,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         container imageSharingPlatform "Containers" {
             include *
+            exclude relationship.tag==components
             animation {
                 webApp
                 identityServerApp
@@ -370,7 +366,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
 
         dynamic timelinesApiApp "TimelinesApiQueryInfluencerPostsInTimeline" {
             title "Follower query influencer posts in the timeline"
-            user -> getTimelineEndpoint "/timelines/{userId}"
+            webApp -> getTimelineEndpoint "/timelines/{userId}"
             getTimelineEndpoint -> timelineQuery "Get user timeline by id {userId}"
             timelineQuery -> timelinesRepository "Reads timeline by user id {userId}"
             timelineQuery -> usersClient "Get user influencer folowers"
@@ -379,7 +375,7 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             usersClient -> timelineQuery "Returns list of influencers"
             timelineQuery -> influencersPostsRepository "if user follows influencers, reads influencer posts"
             timelineQuery -> getTimelineEndpoint "Returns timeline or if user follows influencers, returns aggregated timeline with influencers posts"
-            getTimelineEndpoint -> user "Returns timeline"
+            getTimelineEndpoint -> webApp "Returns timeline"
             autoLayout rl
         }
 
