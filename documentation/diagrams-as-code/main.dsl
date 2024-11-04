@@ -337,14 +337,14 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             autoLayout
         }
         
-        dynamic imageSharingPlatform "Authentication"{
-            title "Authentication"
+        dynamic imageSharingPlatform "AuthenticationOAuthRuntime"{
+            title "Authenticate user flow"
             user -> webApp "Initiates authentication"
             webApp -> identityServerApp "Requests authentication"
             identityServerApp -> googleauth "Delegates authentication via OAuth 2.0"
             identityServerApp -> identityServerDatabase "Verifies user identity and retrieves user details"
             identityServerApp -> webApp "Issues JWT access token upon successful authentication"
-            autoLayout
+            autoLayout lr
         }
 
         component timelinesApiApp "TimelinesApiAppComponents" {
