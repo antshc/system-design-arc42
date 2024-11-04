@@ -22,16 +22,12 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
                 imagesProcessingFuncApp = container "Images Processing Func" "Resize images, removes temporary." "Functions, C#"
                 postsDatabase = container "Posts Database" "Manage user posts, stores images urls." "NoSQL Document Schema" "Database"
                 timelinesApiApp = container "Timelines API" "Provides timelines functionality via a JSON/HTTP API." "ASP .NET API, C#" {
-                    group "Domain"{
-                        timeline = component "Timeline" "Timeline entity logic" "Doman entity" "components,timelines"
-                        influencersPosts = component "Influencers posts" "Influencers posts entity logic" "Doman entity" "components,timelines"
-                    }
-                    timelinesRepository = component "Timelines repository"
+                    timelinesRepository = component "Timelines repository" "Manages CRUD operations for user timelines, ensuring efficient storage and retrieval in chronological order."
                     updatingTimelineConsumer = component "Updating timeline postCreated event consumer" "Triggers updating followers timelines" "MassTransit Consumer" "components,timelines"
                     followersTimelineUpdater = component "Followers timeline updater" "Updates followers' timelines with the latest posts from the users they follow" "c# classes" "components,timelines"
                     usersClient = component "Users client" "Get users data from users microservice" "HTTP client" "components,timelines"
 
-                    influencersPostsRepository = component "Influencers posts repository" "" "" "components,timelines"
+                    influencersPostsRepository = component "Influencers posts repository" "Manages CRUD operations for influencer posts" "" "components,timelines"
 
                     getTimelineEndpoint = component "Timelines endpoint" "Handles query requests""Minimal API endpoint" "components,timelines"
                     timelineQuery = component "Timelines query" "Build user timeline query"
@@ -95,15 +91,12 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
         # updating timeline
         postsApiApp -> updatingTimelineConsumer "uses" "messages:posts" "components,timelines"
         updatingTimelineConsumer -> followersTimelineUpdater "uses""" "components,timelines"
-        updatingTimelineConsumer -> timeline "uses" """components,timelines"
         followersTimelineUpdater -> usersClient "uses" """components,timelines"
         usersClient -> usersApiApp "uses" "REST/HTTP" "components,timelines"
         followersTimelineUpdater -> timelinesRepository "uses" "" "components,timelines"
         followersTimelineUpdater -> influencersPostsRepository "uses" "" "components,timelines"
-        timelinesRepository -> timelinesTable "uses" "" "components,timelines"
-
-        # updating influencers posts
-        influencersPostsRepository -> influencersPostsTable "uses" "" "components,timelines"
+        timelinesRepository -> timelinesDatabase "uses" "" "components,timelines"
+        influencersPostsRepository -> timelinesDatabase "uses" "" "components,timelines"
 
         # query timelines
         webApp -> getTimelineEndpoint "uses" "REST/HTTP" "components,timelines"
@@ -361,6 +354,13 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             usersApiApp -> usersClient "Returns user {'type' : 'influencer'}"
             usersClient -> followersTimelineUpdater "Returns user {'type' : 'influencer'}"
             followersTimelineUpdater -> influencersPostsRepository "if user type 'influencer', adds influencer post"
+            influencersPostsRepository -> timelinesDatabase "influencers posts table"
+            timelinesDatabase -> influencersPostsRepository "Returns"
+            influencersPostsRepository -> followersTimelineUpdater "Returns"
+            followersTimelineUpdater -> timelinesRepository "Saves timeline"
+            timelinesRepository -> timelinesDatabase "timelines table"
+            timelinesDatabase -> timelinesRepository "Returns"
+            timelinesRepository -> followersTimelineUpdater "Returns"
             autoLayout lr
         }
 
@@ -369,11 +369,17 @@ workspace "highly-scalable-image-sharing-platform" "This is an example workspace
             webApp -> getTimelineEndpoint "/timelines/{userId}"
             getTimelineEndpoint -> timelineQuery "Get user timeline by id {userId}"
             timelineQuery -> timelinesRepository "Reads timeline by user id {userId}"
+            timelinesRepository -> timelinesDatabase "Reads timelines from table"
+            timelinesDatabase -> timelinesRepository "Returns"
+            timelinesRepository -> timelineQuery "Returns"
             timelineQuery -> usersClient "Get user influencer folowers"
             usersClient -> usersApiApp "GET /users/{id}/followers?type=influencer"
             usersApiApp -> usersClient "Returns list of influencers"
             usersClient -> timelineQuery "Returns list of influencers"
             timelineQuery -> influencersPostsRepository "if user follows influencers, reads influencer posts"
+            influencersPostsRepository -> timelinesDatabase "influencers posts table"
+            timelinesDatabase -> influencersPostsRepository "Returns"
+            influencersPostsRepository -> timelineQuery "Returns"
             timelineQuery -> getTimelineEndpoint "Returns timeline or if user follows influencers, returns aggregated timeline with influencers posts"
             getTimelineEndpoint -> webApp "Returns timeline"
             autoLayout rl

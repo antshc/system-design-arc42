@@ -1,7 +1,19 @@
-
-
 ==== Users API
-include::_users_api_short_description.adoc[]
+
+The Users API microservice is responsible for managing all user-related functionality within the system. 
+Its primary purpose is to handle operations such as user registration, authentication, profile management, and account settings. 
+It also manages user data, including personal information, preferences, and security features like password updates and account recovery.
+
+===== Interface(s)
+link:https://editor.swagger.io/?url=https://raw.githubusercontent.com/shcherby/system-design-arc42/refs/heads/main/documentation/arc42/building_blocks/users_api/users_api_swagger.yaml[REST API]
+link:https://github.com[Messages]
+
+===== Locations
+link:https://github.com[users-api details]
+link:https://github.com[users-api repository]
+link:https://github.com[users-api CI/CD]
+link:https://github.com[users-api database]
+link:https://github.com[users-api releases]
 
 ===== Quality/Performance Characteristics
 ====== Performance
@@ -30,54 +42,3 @@ include::_users_api_short_description.adoc[]
 * Risks of unauthorized access or data breaches if security measures are not adequately implemented.
 * Reliance on third-party authentication providers could lead to outages or service interruptions.
 * Complexity in the registration or authentication process may lead to user drop-off.
-
-
-=== Level 2
-
-==== White Box API Application
-
-[plantuml, format=png]   
-....
-include::../diagrams/Components.puml[]
-....
-
-**Legende**
-[plantuml, format=png]   
-....
-include::../diagrams/Components-key.puml[]
-....
-
-
-_<white box template>_
-
-==== White Box _<building block 2>_
-
-
-_<white box template>_
-
-...
-
-==== White Box _<building block m>_
-
-
-_<white box template>_
-
-
-
-=== Level 3
-
-
-
-
-==== White Box <_building block x.1_>
-
-
-
-
-_<white box template>_
-
-
-==== White Box <_building block x.2_>
-
-_<white box template>_
-

@@ -19,9 +19,6 @@ include::../diagrams/Containers-key.puml[]
 ....
 
 === Microservices
-==== Timelines API
-include::./building_blocks/timelines_api/_timelines_api_short.adoc[]
-include::./building_blocks/timelines_api/_timelines_api_details.adoc[]
+include::./building_blocks/timelines_api/_timelines_api.adoc[]
 
-==== Users API
-include::building_blocks/users_api/_users_api_short.adoc[]
+include::./building_blocks/users_api/_users_api.adoc[]
