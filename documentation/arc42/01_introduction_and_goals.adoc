@@ -41,20 +41,61 @@ This document is intended for developers, architects, DevOps engineers, and othe
 
 === Quality Goals
 
-**Scalability**:
+[cols="5*", options="header"]
+|===
+| ID | Quality Category   | Quality  | Description | Scenario
 
+| QGS1
+| Scalability
+| Users visits
+a| 
 .Billions of active users (~1-2 Billion)
 * Hundreds of millions of visits/day (100-500 Million)
-* Each user uploads ~1 image/day
-** Each image size ~2MB
-** Data Processing Volume: ~1PB/day
+|
 
-**Availability**:
+| QGS2
+| Scalability
+| Users activity
+a| 
+.Each user uploads ~1 image/day
+* Each image size ~2MB
+* Data Processing Volume: ~1PB/day
+|
 
-* The system must be designed to ensure minimal downtime, providing a 99.9% availability SLA.
+| QGS3
+| Scalability        
+| Dynamic Scaling  
+| The system should scale out when user activity increases without performance degradation and scale down when no activity. 
+| 
 
-**Performance**:
+| QGS4
+| Scalability        
+| Geographic Distribution 
+| The application should be accessible with minimal latency in the europe regions through data centers or edge servers.
+| 
 
+| QGR1
+| Reliability
+| Minimizes downtime 
+| The system must be designed to ensure minimal downtime, providing a 99.9% availability SLA.
+|
+
+| QGR2
+| Reliability        
+| Fault Tolerance        
+| Maintains service continuity despite failures. In case of a node failure, the system should redistribute load seamlessly, avoiding disruptions.         
+| 
+
+| QGR3
+| Reliability        
+| Minimizes downtime       
+| In the event of a regional disaster, the system should recover instantly with zero downtime.       
+| 
+
+| QGP1
+| Performance
+| Low Latency
+a| 
 .Response time
 * get images, search user <500ms at 99pt
 * download image of size 2mb ~2000 ms
@@ -62,19 +103,69 @@ This document is intended for developers, architects, DevOps engineers, and othe
 
 .Out of scope
 * Uploads and downloads of images must be fast and efficient, with minimal latency, even under heavy loads.
+|
 
-**Security**:
+| QGP2
+| Performance        
+| High Throughput        
+| The system should support up to 10,000 concurrent requests per second, especially during peak hours.           
+| 
 
-* User data, including uploaded images, should be stored securely.
-* Users must be able to authenticate using Google authentication.
+| QGSEC1
+| Security
+| Access Control         
+a| 
+* Limits access for functionality to authorized users only. 
+* Only authenticated and authorized users can access specific features like posting content, following other users. 
+* Un authorized users can view limited timeline.          
+| 
 
-**Portability**:
+| QGS2
+| Security           
+| Data Encryption        
+| Protects sensitive data both in transit and at rest. User credentials and personal information should be encrypted to ensure privacy and comply with data regulations.      
+| 
 
-* Support for multiple platforms web and mobile
+| QGP1
+| Portability
+| User Interfaces        
+| Support only web interface       
+| 
 
-**Maintainability**:
+| QGM1
+| Maintainability
+| Modular Design       
+a| 
+* The system should be easy to modify and extend.
+* Allowing multiple independent teams to work on different modules simultaneously without conflicts. 
+* Supports isolated updates and bug fixes. Changes, such as bug fixes, feature enhancements, or performance improvements, should be implemented quickly with minimal impact on other components.      
+| 
 
-* The system should be easy to modify and extend, allowing multiple independent teams to work on different modules simultaneously without conflicts. Changes, such as bug fixes, feature enhancements, or performance improvements, should be implemented quickly with minimal impact on other components.
+| QGM2
+| Maintainability 
+| Automated Testing
+| Validates system functionality with each deployment. Automated integration and regression tests should run for each deployment to reduce the risk of introducing errors or breaking functionality.
+| 
+
+| QGM3
+| Maintainability 
+| Teams Scalability
+| Enables multiple teams to work on the system simultaneously without dependencies that cause delays. The architecture should support decoupled microservices, allowing teams to deploy and update their services independently.
+| 
+
+| QGC1
+| Compatibility 
+| Backward Compatibility
+| Supports multiple API versions and maintains backward compatibility with existing clients. The system should allow existing clients to function without breaking when new API versions are introduced.
+| 
+
+| QGCE1
+| Cost Efficiency 
+| Storage Optimization
+| Reduces storage space usage to minimize costs.
+| 
+
+|===
 
 
 === Stakeholders

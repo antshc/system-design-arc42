@@ -4,121 +4,99 @@
 |===
 | Quality Goal | Quality goal category | Solution approach | Details
 
-|
+| QGM1, QGM2, QGM3
 | Maintainability, Scalability
 | The system will adopt a microservices architecture to meet the requirement of handling 1 billion users, as defined by the quality goals. This architecture allows each microservice to scale independently, ensuring efficient load management. The structure of microservices also supports parallel development by multiple teams, enabling faster and more flexible system evolution.
 | https://learn.microsoft.com/en-us/azure/architecture/microservices[Microservices architecture design]
 
-|
+| QGM1
 | Maintainability
 | The Microservice will follow Clean Architecture principles to maintain a clear separation of concerns between business logic and external systems (e.g., databases, user interfaces). This approach promotes high maintainability, testability, and flexibility. By isolating core business rules from technical details, the system will remain adaptable to future changes, allowing easy updates and enhancements.
 | https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture[Clean architecture]
 
-|
-| Maintainability
-| The Microservice will follow Clean Architecture principles to maintain a clear separation of concerns between business logic and external systems (e.g., databases, user interfaces). This approach promotes high maintainability, testability, and flexibility. By isolating core business rules from technical details, the system will remain adaptable to future changes, allowing easy updates and enhancements.
-| https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture[Clean architecture]
-
-|
+| QGS1, QGS2
 | Maintainability, Scalability
 | REST APIs for microservice interface design. REST is based on some constraints and principles that promote simplicity, scalability, and statelessness in the design. The client-server design pattern enforces the separation of concerns, which helps the client and the server components evolve independently.
 | https://restfulapi.net/[What is REST]
 
-|
-| Maintainability, Scalability
-| We chose REST APIs to ensure loose coupling between microservices and clients, enabling independent teams to develop and deploy features without impacting other components. REST APIs also provide scalability and technology agnosticism, allowing services to evolve independently.
-| https://restfulapi.net/[What is REST]
-
-|
-| Flexibility, Compatibility
+| QGC1
+| Compatibility
 | API Versioning and Backward Compatibility	API versioning was implemented to ensure that newer versions of services can be introduced without breaking existing clients. This supports smooth transitions and ensures system stability during upgrades.
 | https://github.com/dotnet/aspnet-api-versioning[api versioning]
 
-|
-| Availability, Scalability
+| QGS3, QGR2
+| Reliability, Scalability
 | An event-driven architecture was chosen to decouple services, improve system responsiveness, and allow services to scale independently. Asynchronous communication via messaging queues supports high availability and scalability.
 | https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven[What is REST]
 
-|
-| Reliability
-| An event-driven architecture was chosen to decouple services, improve system responsiveness, and allow services to scale independently. Asynchronous communication via messaging queues supports high availability and scalability.
-| https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven[What is REST]
-
-|
+| QGS3, QGR2
 | Fault Tolerance, Reliability
 | Materialized Views for Data Replication	Materialized views were chosen to create copies of data in different microservice databases. This approach increases fault tolerance by ensuring that each microservice has its own local copy of the data, reducing dependency on other services and improving reliability.
 | https://learn.microsoft.com/en-us/azure/architecture/patterns/materialized-view[Materialized view]
 
-|
-| Performance, Scalability, Fault Tolerance, Reliability
+| QGS1, QGS3
+| Scalability
 | NoSQL databases with data partitioning, sharding, and replication were selected to handle large volumes of data and high load efficiently. Sharding ensures that data is distributed across multiple servers, allowing horizontal scaling as the dataset grows. Replication ensures that copies of data are stored across multiple nodes, improving fault tolerance and system reliability. Replication guarantees data availability even if a node fails, while sharding helps with load balancing by isolating data into smaller, manageable chunks.	
 | https://learn.microsoft.com/en-us/azure/architecture/patterns/materialized-view[Materialized view]
 
-|
+| QGR1, QGR2
 | Reliability, Availability
 | We chose to implement system Health Monitoring and Alerts and automated alerting to ensure real-time tracking of system performance, failures, and anomalies. This enables proactive issue resolution, minimizes downtime, and improves overall reliability. Tools like Azure Monitor or Application Insights will be used to set up alerts and notifications based on defined thresholds.	Reliability, Availability
 | https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/monitor-azure-resource[Monitor azure resource]
 
-|
-| Performance, Maintainability, Flexibility
-| A Backend for Frontend (BFF) architecture was selected to tailor the backend services to the specific needs of different front-end clients (e.g., mobile, web). This allows each frontend to have an optimized API and reduces client complexity by offloading logic to the backend, ensuring better performance and user experience. It also allows more focused security and validation per frontend type.	
-| https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends[Backends for frontends]
-
-|
-| Availability, Fault Tolerance, Scalability
-| An active-active availability strategy was chosen to ensure that multiple instances of the system are running concurrently across different geographical regions. This reduces downtime and improves fault tolerance, as traffic can be rerouted instantly to other active nodes in the event of a failure. It also helps with load balancing and improves response times by directing users to the nearest active instance.
+| QGR3
+| Fault Tolerance
+| An active-active availability strategy was chosen to ensure that multiple instances of the system are running concurrently across 2 regions. This reduces downtime and improves fault tolerance, as traffic can be rerouted instantly to other active nodes in the event of a failure. It also helps with load balancing and improves response times by directing users to the nearest active instance.
 | https://learn.microsoft.com/en-us/azure/well-architected/reliability/highly-available-multi-region-design[active-active availability strategy]
 
-|
-| Performance, Cost Efficiency, Scalability
-| To reduce storage space usage, images are resized before storage, retaining only necessary dimensions and compressing files to improve performance. This strategy minimizes storage costs and optimizes retrieval speeds, especially for high-resolution or large images that may not be necessary in full resolution for all use cases. Additionally, it helps reduce bandwidth consumption when delivering images to end-users.	
+| QGCE1
+| Cost Efficiency
+| To reduce storage space usage, images are resized before storage, retaining only necessary dimensions and compressing files to improve performance. This strategy minimizes storage costs and optimizes retrieval speeds, especially for high-resolution or large images that may not be necessary in full resolution for all use cases.
 | 
 
-|
-| Cost Efficiency, Simplicity, Scalability
+| QGCE1
+| Cost Efficiency
 | Images are stored in a single copy, as they are not considered mission-critical. This strategy reduces storage costs and complexity while ensuring that the system can still operate effectively if images are lost or corrupted. Since the loss of images will not affect core system functionality, this approach reduces redundancy overhead, making it more cost-efficient.
 | https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy[storage-redundancy]
 
-|
+| QGS1
 | Performance, Availability, Scalability, Cost Efficiency
-| A CDN caching strategy was chosen to offload the delivery of static content (such as images, videos, and documents) to edge servers located closer to users. This reduces the load on the origin server, decreases latency, and improves response times. By caching content at multiple locations, CDN helps reduce bandwidth costs and improves fault tolerance, ensuring content availability even if the origin server experiences issues.
+| A Azure Front Door CDN caching was chosen to offload the delivery of images content to edge servers located closer to users. 
 | TODO
 
-|
-| Maintainability, Security, Scalability, Flexibility
-| An API Gateway was chosen to act as a single entry point for all incoming requests, hiding the internal complexities of the system. The API Gateway abstracts the details of microservices and routes requests to the appropriate backend services. It also provides centralized management for security, authentication, rate limiting, logging, and monitoring. This reduces the need for client applications to directly communicate with multiple services and simplifies the architecture by providing a uniform interface for users.
+| QGSEC1
+| Security
+| A Azure Front Door as an API Gateway was chosen to act as a single entry point for all incoming requests, hiding the internal complexities of the system. The API Gateway abstracts the details of microservices and routes requests to the appropriate backend services. It also provides centralized management for security, authentication, rate limiting, logging, and monitoring. This reduces the need for client applications to directly communicate with multiple services and simplifies the architecture by providing a uniform interface for users.
 | https://learn.microsoft.com/en-us/azure/architecture/microservices/design/gateway[gateway]
 
-|
-| Flexibility, Maintainability, Security, Agility
+| QGC1
+| Maintainability
 | External configuration storage was chosen to centralize the management of system configuration settings on the environments. Configuration settings can be easily updated without needing to redeploy services. This allows dynamic configuration changes without downtime, enables more secure management of sensitive information (e.g., API keys, database connections), and simplifies maintenance and updates.
 | https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview[azure-app-configuration]
 
-|
-| Flexibility, Risk Management, Agility, Maintainability
+| QGC1
+| Maintainability, Compatibility
 | Feature toggles (also known as feature flags) were chosen to enable or disable features dynamically without deploying new code. This allows for gradual rollouts, A/B testing, and safe experimentation in production environments. By decoupling feature releases from deployment cycles, it also minimizes the risk of introducing new features or changes that could negatively impact the user experience. This strategy enables greater flexibility in managing features and reduces the complexity of large-scale system changes.
 | https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management[Concept feature management]
 
-|
-| Maintainability, Reliability
+| QGM3
+| Maintainability
 | CI/CD pipelines were selected to automate deployment and testing, allowing faster and more reliable releases. This strategy reduces manual errors and ensures continuous integration of new features, improving overall system agility.
 | https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management[Concept feature management]
 
-|
-| Reliability, Maintainability, Quality, Performance
+| QGM2
+| Maintainability
 | A comprehensive testing strategy was selected to ensure system robustness, quality, and stability across all stages of development. This includes unit tests, integration tests, load tests, and acceptance tests. By automating testing as part of the CI/CD pipeline, we ensure that code is consistently validated before deployment. Load and performance testing help simulate real-world scenarios, while automated acceptance tests ensure that new features meet business requirements. This proactive approach improves the reliability and maintainability of the system.
 |  https://learn.microsoft.com/en-us/training/modules/visual-studio-test-concepts/4-different-types-of-testing[4-different-types-of-testing] +
    https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-8.0[integration-tests]
 
-|
-| Scalability, Availability, Performance
+| QGS1
+| Scalability
 | Load balancing was implemented to evenly distribute traffic across multiple instances of the service, ensuring that no single instance becomes a bottleneck. This improves system performance, minimizes downtime, and ensures high availability by dynamically routing traffic to healthy instances. It also allows the system to scale horizontally by adding new instances as needed. Load balancing is crucial for handling increased load and providing a seamless user experience under varying traffic conditions.
 |  TODO
 
-|
-| Flexibility, Maintainability, Scalability, Fault Tolerance
+| QGS1, QGR1
+| Scalability, Fault Tolerance
 | Service discovery was chosen to enable dynamic detection and registration of services within the system. This allows services to communicate with each other without hard-coded addresses or manual configuration. It ensures that services can automatically locate and interact with the correct endpoints, even as instances are added or removed. Service discovery is critical in a microservice architecture where services may scale up or down, and it simplifies the management of complex, dynamic environments.
 |  TODO
 |===
-
-
