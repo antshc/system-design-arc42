@@ -4,17 +4,14 @@
 [[section-runtime-view]]
 == Runtime View
 
-
-
-
 === Sign-In
+[plantuml, format=png]   
+....
+include::../diagrams/AuthenticationOAuthRuntime.puml[]
+....
 
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
-
-=== <Runtime Scenario 2>
-
-=== ...
-
-=== <Runtime Scenario n>
+**Legende**
+[plantuml, format=png]   
+....
+include::../diagrams/AuthenticationOAuthRuntime-key.puml[]
+....
