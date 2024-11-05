@@ -19,8 +19,6 @@ jobs:
       - uses: actions/setup-ruby@v1
       - name: Setup docToolchain
         run: chmod +x dtcw
-      - name: Migrate Markdown based ADRs from adr-tools to AsciiDoc
-        run: ./dtcw exportMarkdown && cp ./build/adrs/*.adoc ./documentation/adrs/
       - name: Generate HTML site
         run: ./dtcw exportStructurizr generateHTML
       - name: Copy documentation to public
