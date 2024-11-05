@@ -2,10 +2,84 @@
 == Quality Requirements
 
 
+[cols="5*", options="header"]
+|===
+| ID | Quality Category   | Quality  | Description | Scenario
 
+| QGS2
+| Scalability
+| Users activity
+a| 
+.Each user uploads ~1 image/day
+* Each image size ~2MB
+* Data Processing Volume: ~1PB/day
+|
 
-=== Quality Tree
+| QGR2
+| Reliability        
+| Fault Tolerance        
+| Maintains service continuity despite failures. In case of a failure, the system should redistribute load seamlessly, avoiding disruptions.         
+| 
 
+| QGP1
+| Performance
+| Low Latency
+a| 
+.Response time
+* get images, search user <500ms at 99pt
+* download image of size 2mb ~2000 ms
+* Timeline/Newsfeed load time < 1000ms at 99pt
+
+.Out of scope
+* Uploads and downloads of images must be fast and efficient, with minimal latency, even under heavy loads.
+|
+
+| QGP2
+| Performance        
+| High Throughput        
+| The system should support up to 10,000 concurrent requests per second, especially during peak hours.           
+| 
+
+| QGSEC1
+| Security
+| Access Control         
+a| 
+* Limits access for functionality to authorized users only. 
+* Only authenticated and authorized users can access specific features like posting content, following other users. 
+* Un authorized users can view limited timeline.          
+| 
+
+| QGS2
+| Security           
+| Data Encryption        
+| Protects sensitive data both in transit and at rest. User credentials and personal information should be encrypted to ensure privacy and comply with data regulations.      
+| 
+
+| QGP1
+| Portability
+| User Interfaces        
+| Support only web interface       
+| 
+
+| QGM2
+| Maintainability 
+| Automated Testing
+| Validates system functionality with each deployment. Automated integration and regression tests should run for each deployment to reduce the risk of introducing errors or breaking functionality.
+| 
+
+| QGM3
+| Maintainability 
+| Teams Scalability
+| Enables multiple teams to work on the system simultaneously without dependencies that cause delays. The architecture should support decoupled microservices, allowing teams to deploy and update their services independently.
+| 
+
+| QGC1
+| Compatibility 
+| Backward Compatibility
+| Supports multiple API versions and maintains backward compatibility with existing clients. The system should allow existing clients to function without breaking when new API versions are introduced.
+| 
+
+|===
 
 
 === Quality Scenarios

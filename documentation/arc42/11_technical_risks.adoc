@@ -1,5 +1,69 @@
 [[section-technical-risks]]
-== Risks and Technical Debts
+== Risks 
+[cols="1,3,4", options="header"]
+|===
+| Risk ID | Risk Description                     | Mitigation Strategy
+
+| R1      
+| High load from influencers causing performance degradation due to large-scale timeline updates. 
+| Implement a separate materialized view for influencer posts to reduce load on the main timeline. Use caching and batch processing.
+
+| R2     
+| Dependency on external APIs, leading to potential service disruptions if APIs are down. 
+| Use local caching and circuit breakers to handle temporary outages and minimize the impact on users.
+
+| R3    
+| Cost overruns due to high storage and compute needs as the system scales. 
+| Optimize storage through data compression, archiving, and implement auto-scaling to manage resources dynamically.
+
+| R4   
+| Inconsistent data updates due to eventual consistency in microservices. 
+| Use idempotent operations and reconcile data periodically to ensure consistency across services.
+
+| R5     
+| Risk of unauthorized access and data breaches. 
+| Enforce strong access controls, data encryption, and multi-factor authentication for enhanced security.
+
+| R6    
+| Outdated data in influencer timelines due to cache staleness. 
+| Set appropriate cache expiration times and implement cache invalidation strategies to keep data fresh.
+|===
+
+== Technical Debts
+
+[cols="1,3,4", options="header"]
+|===
+| Debt ID | Technical Debt Description             | Impact and Remediation Strategy
+
+| TD1     
+| Lack of centralized logging system for monitoring and troubleshooting. 
+| Makes debugging across services difficult. Remediate by implementing a centralized logging solution such as Azure Application Insights or ELK Stack.
+
+| TD2     
+| Incomplete API versioning, leading to backward compatibility issues. 
+| Causes disruptions for clients using older API versions. Remediate by adopting consistent API versioning and supporting multiple versions.
+
+| TD3     
+| Insufficient automated tests for microservices. 
+| Leads to increased risk of errors during deployment. Remediate by developing automated test suites covering unit, integration, and end-to-end tests.
+
+| TD4    
+| Hard-coded configurations across services. 
+| Reduces flexibility in deployment and configuration management. Remediate by using a centralized configuration management tool, like Azure App Configuration.
+
+| TD5     
+| Inconsistent error handling and retry mechanisms in services. 
+| Leads to unpredictable behavior during failures. Remediate by standardizing error handling and retry policies across services.
+
+| TD6    
+| Limited resilience testing for failure scenarios (e.g., network partitions). 
+| Increases the risk of unexpected downtime. Remediate by conducting regular chaos engineering exercises to test service resilience.
+
+| TD7  
+| No clear deprecation policy for obsolete services or APIs. 
+| Results in bloated codebase and confusion among developers. Remediate by establishing a deprecation policy with clear timelines for phasing out outdated services or versions.
+|===
+
 
 
 
