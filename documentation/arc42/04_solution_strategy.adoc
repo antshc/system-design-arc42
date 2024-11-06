@@ -1,6 +1,6 @@
 [[section-solution-strategy]]
 == Solution Strategy
-[cols="3*"]
+[cols="4*"]
 |===
 | Quality Goal | Quality goal category | Solution approach | Details
 
