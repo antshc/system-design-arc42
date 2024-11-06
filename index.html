@@ -976,29 +976,28 @@ Other types will be provided by designers</p></td>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Quality Goal</th>
 <th class="tableblock halign-left valign-top">Quality goal category</th>
 <th class="tableblock halign-left valign-top">Solution approach</th>
+<th class="tableblock halign-left valign-top">Details</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Details</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGM1, QGM2, QGM3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability, Scalability</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system will adopt a microservices architecture to meet the requirement of handling 1 billion users, as defined by the quality goals. This architecture allows each microservice to scale independently, ensuring efficient load management. The structure of microservices also supports parallel development by multiple teams, enabling faster and more flexible system evolution.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices">Microservices architecture design</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">QGM1</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QGM1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The Microservice will follow Clean Architecture principles to maintain a clear separation of concerns between business logic and external systems (e.g., databases, user interfaces). This approach promotes high maintainability, testability, and flexibility. By isolating core business rules from technical details, the system will remain adaptable to future changes, allowing easy updates and enhancements.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture">Clean architecture</a></p></td>
@@ -1007,18 +1006,16 @@ Other types will be provided by designers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGS1, QGS2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability, Scalability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">REST APIs for microservice interface design. REST is based on some constraints and principles that promote simplicity, scalability, and statelessness in the design. The client-server design pattern enforces the separation of concerns, which helps the client and the server components evolve independently.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://restfulapi.net/">What is REST</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://restfulapi.net/">What is REST</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGC1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Compatibility</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API Versioning and Backward Compatibility	API versioning was implemented to ensure that newer versions of services can be introduced without breaking existing clients. This supports smooth transitions and ensures system stability during upgrades.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/dotnet/aspnet-api-versioning">api versioning</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">QGS3, QGR2</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QGS3, QGR2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reliability, Scalability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An event-driven architecture was chosen to decouple services, improve system responsiveness, and allow services to scale independently. Asynchronous communication via messaging queues supports high availability and scalability.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven">What is REST</a></p></td>
@@ -1027,18 +1024,16 @@ Other types will be provided by designers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGS3, QGR2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fault Tolerance, Reliability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Materialized Views for Data Replication	Materialized views were chosen to create copies of data in different microservice databases. This approach increases fault tolerance by ensuring that each microservice has its own local copy of the data, reducing dependency on other services and improving reliability.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/materialized-view">Materialized view</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/materialized-view">Materialized view</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGS1, QGS3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scalability</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">NoSQL databases with data partitioning, sharding, and replication were selected to handle large volumes of data and high load efficiently. Sharding ensures that data is distributed across multiple servers, allowing horizontal scaling as the dataset grows. Replication ensures that copies of data are stored across multiple nodes, improving fault tolerance and system reliability. Replication guarantees data availability even if a node fails, while sharding helps with load balancing by isolating data into smaller, manageable chunks.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/materialized-view">Materialized view</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">QGR1, QGR2</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QGR1, QGR2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reliability, Availability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">We chose to implement system Health Monitoring and Alerts and automated alerting to ensure real-time tracking of system performance, failures, and anomalies. This enables proactive issue resolution, minimizes downtime, and improves overall reliability. Tools like Azure Monitor or Application Insights will be used to set up alerts and notifications based on defined thresholds.	Reliability, Availability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/monitor-azure-resource">Monitor azure resource</a></p></td>
@@ -1047,18 +1042,16 @@ Other types will be provided by designers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGR3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fault Tolerance</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An active-active availability strategy was chosen to ensure that multiple instances of the system are running concurrently across 2 regions. This reduces downtime and improves fault tolerance, as traffic can be rerouted instantly to other active nodes in the event of a failure. It also helps with load balancing and improves response times by directing users to the nearest active instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/well-architected/reliability/highly-available-multi-region-design">active-active availability strategy</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/well-architected/reliability/highly-available-multi-region-design">active-active availability strategy</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGCE1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cost Efficiency</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">To reduce storage space usage, images are resized before storage, retaining only necessary dimensions and compressing files to improve performance. This strategy minimizes storage costs and optimizes retrieval speeds, especially for high-resolution or large images that may not be necessary in full resolution for all use cases.</p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">QGCE1</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QGCE1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cost Efficiency</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Images are stored in a single copy, as they are not considered mission-critical. This strategy reduces storage costs and complexity while ensuring that the system can still operate effectively if images are lost or corrupted. Since the loss of images will not affect core system functionality, this approach reduces redundancy overhead, making it more cost-efficient.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy">storage-redundancy</a></p></td>
@@ -1067,18 +1060,16 @@ Other types will be provided by designers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGS1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Performance, Availability, Scalability, Cost Efficiency</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A Azure Front Door CDN caching was chosen to offload the delivery of images content to edge servers located closer to users.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGSEC1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A Azure Front Door as an API Gateway was chosen to act as a single entry point for all incoming requests, hiding the internal complexities of the system. The API Gateway abstracts the details of microservices and routes requests to the appropriate backend services. It also provides centralized management for security, authentication, rate limiting, logging, and monitoring. This reduces the need for client applications to directly communicate with multiple services and simplifies the architecture by providing a uniform interface for users.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/design/gateway">gateway</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">QGC1</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QGC1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">External configuration storage was chosen to centralize the management of system configuration settings on the environments. Configuration settings can be easily updated without needing to redeploy services. This allows dynamic configuration changes without downtime, enables more secure management of sensitive information (e.g., API keys, database connections), and simplifies maintenance and updates.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview">azure-app-configuration</a></p></td>
@@ -1087,18 +1078,16 @@ Other types will be provided by designers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGC1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability, Compatibility</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Feature toggles (also known as feature flags) were chosen to enable or disable features dynamically without deploying new code. This allows for gradual rollouts, A/B testing, and safe experimentation in production environments. By decoupling feature releases from deployment cycles, it also minimizes the risk of introducing new features or changes that could negatively impact the user experience. This strategy enables greater flexibility in managing features and reduces the complexity of large-scale system changes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management">Concept feature management</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management">Concept feature management</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGM3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines were selected to automate deployment and testing, allowing faster and more reliable releases. This strategy reduces manual errors and ensures continuous integration of new features, improving overall system agility.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management">Concept feature management</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">QGM2</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QGM2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A comprehensive testing strategy was selected to ensure system robustness, quality, and stability across all stages of development. This includes unit tests, integration tests, load tests, and acceptance tests. By automating testing as part of the CI/CD pipeline, we ensure that code is consistently validated before deployment. Load and performance testing help simulate real-world scenarios, while automated acceptance tests ensure that new features meet business requirements. This proactive approach improves the reliability and maintainability of the system.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://learn.microsoft.com/en-us/training/modules/visual-studio-test-concepts/4-different-types-of-testing">4-different-types-of-testing</a><br>
@@ -1108,11 +1097,13 @@ Other types will be provided by designers</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGS1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scalability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Load balancing was implemented to evenly distribute traffic across multiple instances of the service, ensuring that no single instance becomes a bottleneck. This improves system performance, minimizes downtime, and ensures high availability by dynamically routing traffic to healthy instances. It also allows the system to scale horizontally by adding new instances as needed. Load balancing is crucial for handling increased load and providing a seamless user experience under varying traffic conditions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QGS1, QGR1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scalability, Fault Tolerance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service discovery was chosen to enable dynamic detection and registration of services within the system. This allows services to communicate with each other without hard-coded addresses or manual configuration. It ensures that services can automatically locate and interact with the correct endpoints, even as instances are added or removed. Service discovery is critical in a microservice architecture where services may scale up or down, and it simplifies the management of complex, dynamic environments.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TODO</p></td>
 </tr>
 </tbody>
 </table>
@@ -1582,7 +1573,7 @@ It also manages user data, including personal information, preferences, and secu
 <h3 id="_development_environment"><a class="anchor" href="#_development_environment"></a>7.1. Development environment</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/diag-4a03fdb39a644399b59f47d85bd50dfb.png" alt="Diagram" width="2987" height="1621">
+<img src="./images/diag-38c6c068877ea8eff69c36302d56fa27.png" alt="Diagram" width="2987" height="1621">
 </div>
 </div>
 <div class="paragraph">
@@ -1629,7 +1620,7 @@ It also manages user data, including personal information, preferences, and secu
 <h3 id="_production_environment"><a class="anchor" href="#_production_environment"></a>7.2. Production environment</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/diag-2aaa90874c0c4c6e28dfad07dc15b734.png" alt="Diagram" width="3672" height="1621">
+<img src="./images/diag-40535d581c42ae2b030951e9d1a5c7b1.png" alt="Diagram" width="3672" height="1621">
 </div>
 </div>
 <div class="paragraph">
@@ -2164,7 +2155,7 @@ If influencers are followed, posts from the influencers posts table are aggregat
 <div id="footer">
 <div id="footer-text">
 Version 8.1 EN<br>
-Last updated 2024-11-05 21:41:54 UTC
+Last updated 2024-11-06 10:33:25 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
